@@ -1,6 +1,6 @@
 <?php
 
-namespace DemoApp\Module\Base\Presenters;
+namespace Remit\Module\Base\Presenters;
 
 use Nette;
 
