@@ -14,19 +14,26 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
      */
     public $EntityManager;
 
+    public function beforeRender()
+    {
+        if ($this->getUser()->isLoggedIn()) {
+            $this->redirect("Default:");
+        }
+    }
+
     protected function createComponentRegistrationForm()
     {
         $form = new UI\Form;
         $form->addText('username', 'Uživatelské jméno')
-             ->setRequired('Musíte zadat uživatelské jméno!');
+            ->setRequired('Musíte zadat uživatelské jméno!');
         $form->addText('email', 'Email')
-             ->setRequired('Musíte zadat Email!')
-             ->addRule(UI\Form::EMAIL, 'Email není ve správném tvaru!');
+            ->setRequired('Musíte zadat Email!')
+            ->addRule(UI\Form::EMAIL, 'Email není ve správném tvaru!');
         $form->addPassword('password', 'Heslo')
-             ->setRequired('Musíte zadat heslo!')
-             ->addRule(UI\Form::MIN_LENGTH, 'Heslo musí mít alespoň 3 znaky!', 3);
+            ->setRequired('Musíte zadat heslo!')
+            ->addRule(UI\Form::MIN_LENGTH, 'Heslo musí mít alespoň 3 znaky!', 3);
         $form->addPassword('passwordAgain', 'Heslo znovu')
-             ->addRule(UI\Form::EQUAL, "Hesla se musí shodovat!", $form["password"]);
+            ->addRule(UI\Form::EQUAL, "Hesla se musí shodovat!", $form["password"]);
         $form->addReCaptcha('captcha', NULL, "Musíte potvrdit, že jste člověk!");
         $form->addSubmit('register', 'Registrovat');
         $form->onSuccess[] = array($this, 'registrationFormSucceeded');
@@ -41,8 +48,7 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
         if (!is_null($username)) {
             $form["username"]->addError("Zadané uživatelské jméno již někdo využívá!");
-        }
-        elseif (!is_null($email)) {
+        } elseif (!is_null($email)) {
             $form["email"]->addError("Zadaný Email již někdo využívá!");
         }
 

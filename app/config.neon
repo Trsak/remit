@@ -5,13 +5,16 @@ application:
 	mapping:
 		*: Remit\Module\*\Presenters\*Presenter
 
+services:
+    authenticator: MyAuth
+
 extensions:
 	console: Kdyby\Console\DI\ConsoleExtension
 	events: Kdyby\Events\DI\EventsExtension
 	annotations: Kdyby\Annotations\DI\AnnotationsExtension
 	doctrine: Kdyby\Doctrine\DI\OrmExtension
 	facebook: Kdyby\Facebook\DI\FacebookExtension
-	recaptcha: Minetro\Forms\reCAPTCHA\ReCaptchaExtension
+	reCaptcha: ReCaptchaControl\ReCaptchaExtension
 
 doctrine:
 	user: root
@@ -26,6 +29,6 @@ facebook:
 	permissions: [public_profile, email] # theese are the default read permissions, you might need to
 	graphVersion: v2.5
 
-recaptcha:
+reCaptcha:
 	secretKey: 6Ld9WwsTAAAAADsqzL2hucyYVQ4gbtwwIGXVlzhn
 	siteKey: 6Ld9WwsTAAAAAOOaGhh1y7RvXpF3nfPBMAHmeHXM
