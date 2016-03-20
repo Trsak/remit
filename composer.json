@@ -15,6 +15,9 @@
 	],
 	"require": {
 		"php": ">=5.3.0",
-		"nette/nette": "~2.3.0"
+		"nette/nette": "~2.3.0",
+		"kdyby/doctrine": "^3.0",
+		"kdyby/facebook": "^2.0",
+		"minetro/recaptcha": "~1.5.0"
 	}
 }
