@@ -54,8 +54,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                     $this->EntityManager->flush();
 
                     $this->getUser()->login($me["name"], 0);
-                }
-                else {
+                } else {
                     $existing->facebookToken = $fb->getAccessToken();
                     $this->EntityManager->flush();
                     $this->getUser()->login($existing->username, 0);
@@ -92,7 +91,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         } catch (Nette\Security\AuthenticationException $e) {
             $form->addError($e->getMessage());
         }
-        //TODO: Zapamatovat přihlášení
+
+        if ($values["remember"]) {
+            $this->getUser()->setExpiration('1 year', FALSE);
+        }
+        else {
+            $this->getUser()->setExpiration('30 minutes', TRUE);
+        }
     }
 
 }

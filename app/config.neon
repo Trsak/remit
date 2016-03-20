@@ -32,3 +32,7 @@ facebook:
 reCaptcha:
 	secretKey: 6Ld9WwsTAAAAADsqzL2hucyYVQ4gbtwwIGXVlzhn
 	siteKey: 6Ld9WwsTAAAAAOOaGhh1y7RvXpF3nfPBMAHmeHXM
+
+session:
+    autoStart: smart
+    expiration: +1 year
