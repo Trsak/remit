@@ -31,4 +31,14 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
      */
     protected $password;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $facebookId;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $facebookToken;
+
 }

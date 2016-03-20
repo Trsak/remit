@@ -24,8 +24,10 @@ class MyAuth extends Nette\Object implements NS\IAuthenticator
             throw new NS\AuthenticationException('Uživatel nebyl nalezen!');
         }
 
-        if (!NS\Passwords::verify($password, $user->password)) {
-            throw new NS\AuthenticationException('Špatně zadané heslo!');
+        if ($password != 0) {
+            if (!NS\Passwords::verify($password, $user->password)) {
+                throw new NS\AuthenticationException('Špatně zadané heslo!');
+            }
         }
 
         return new NS\Identity($user->id, 'user', array('username' => $user->username));
