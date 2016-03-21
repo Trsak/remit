@@ -1,0 +1,30 @@
+{block content}
+<section class="hero hero-panel">
+    <div class="hero-bg"></div>
+    <div class="container relative">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 pull-none margin-auto">
+                <div class="panel panel-default panel-login">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-film"></i> Přidat film</h3>
+                    </div>
+                    <div class="panel-body">
+                        {form addFilmForm}
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Název filmu" n:name="name" id="srch-term">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="submit" n:name="search"><i class="glyphicon glyphicon-search"></i></button>
+                            </div>
+                        </div>
+                        {/form}
+                    </div>
+                    <div class="panel-footer">
+                        {foreach $moviesFound as $movieFound}
+                            <a href="">{$movieFound->names->cs}</a><br>
+                        {/foreach}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

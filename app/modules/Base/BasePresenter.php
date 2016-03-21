@@ -39,7 +39,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             }
 
             try {
-                $me = $fb->api('/me');
+                $me = $fb->api('/me', NULL, ['fields' => ['id', 'name', 'email']]);
 
                 $existing = $this->EntityManager->getRepository(User::class)->findOneBy(array('facebookId' => $fb->getUser()));
 

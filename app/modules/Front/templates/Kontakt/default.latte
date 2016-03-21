@@ -7,21 +7,31 @@
                     <h4><i class="fa fa-envelope"></i> Napište nám!</h4>
                     <p>Máte nějaký dotaz, nápad nebo připomínku? Pomocí formuláře níže nás můžete kontaktovat.</p>
                 </div>
-                <form>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Email">
+                {form contactForm}
+                    <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span
+                                    class="sr-only">Zavřít</span></button>
+                        <strong>Chybně zadaná data</strong><br>
+                        <ul>
+                            <li n:foreach="$form->errors as $error">{$error}</li>
+                        </ul>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Předmět">
+                        <input n:name="email" type="text" class="form-control" placeholder="Email">
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control" rows="7" placeholder="Zpráva"></textarea>
+                        <input n:name="subject" type="text" class="form-control" placeholder="Předmět">
+                    </div>
+                    <div class="form-group">
+                        <textarea n:name="message" class="form-control" rows="7" placeholder="Zpráva"></textarea>
+                    </div>
+                    <div class="form-group">
+                        {input captcha}
                     </div>
                     <div class="text-center margin-top-30">
-                        <button type="button" class="btn btn-primary btn-lg btn-rounded btn-shadow">Odeslat zprávu
-                        </button>
+                        <input n:name="send" type="submit" class="btn btn-primary btn-lg btn-rounded btn-shadow">
                     </div>
-                </form>
+                {/form}
             </div>
             <div class="col-lg-5 height-300">
                 <img src="{$basePath}/img/content/contact.jpg" class="image-right" alt="">
