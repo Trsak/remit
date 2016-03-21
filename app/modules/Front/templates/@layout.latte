@@ -47,7 +47,8 @@
             {if $user->isLoggedIn()}
                 <div class="nav-profile dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img
-                                src="{$basePath}/img/user/avatar.jpg" alt=""> <span>{$user->getIdentity()->username}</span></a>
+                                src="{$basePath}/img/user/avatar.jpg" alt="">
+                        <span>{$user->getIdentity()->username}</span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#"><i class="fa fa-user"></i> Můj profil</a></li>
                         <li><a href="#"><i class="fa fa-gear"></i> Nastavení</a></li>
@@ -67,8 +68,10 @@
                     </ul>
                 </div>
             {else}
-                <a n:href="Prihlaseni:" data-toggle="tooltip" data-placement="bottom" title="Přihlásit se"><i class="fa fa-user"></i></a>
-                <a n:href="Registrace:" data-toggle="tooltip" data-placement="bottom" title="Zaregistrovat se"><i class="fa fa-users"></i></a>
+                <a n:href="Prihlaseni:" data-toggle="tooltip" data-placement="bottom" title="Přihlásit se"><i
+                            class="fa fa-user"></i></a>
+                <a n:href="Registrace:" data-toggle="tooltip" data-placement="bottom" title="Zaregistrovat se"><i
+                            class="fa fa-users"></i></a>
             {/if}
             <a href="#" data-toggle="modal-search"><i class="fa fa-search"></i></a>
         </div>
@@ -124,12 +127,13 @@
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <h4 class="title">Email Newsletters</h4>
-                <p>Subscribe to our newsletter and get notification when new games are available.</p>
-                <form method="post" class="btn-inline form-inverse">
-                    <input type="text" class="form-control" placeholder="Email..."/>
-                    <button type="submit" class="btn btn-link"><i class="fa fa-envelope"></i></button>
-                </form>
+                <h4 class="title" id="newsletter">Email Newsletter</h4>
+                <p>Nenechte si ujít filmové novinky a nechte se o nich informovat!</p>
+                {form newsletterForm, class=>"btn-inline form-inverse"}
+                    <input type="text" class="form-control" n:name="email" placeholder="Email..."/>
+                    <button n:name="subscribe" type="submit" class="btn btn-link"><i class="fa fa-envelope"></i>
+                    </button>
+                {/form}
             </div>
         </div>
     </div>
@@ -232,7 +236,7 @@
         "debug": false,
         "newestOnTop": false,
         "progressBar": true,
-        "positionClass": "toast-top-right",
+        "positionClass": "toast-top-full-width",
         "preventDuplicates": true,
         "onclick": null,
         "showDuration": "300",
@@ -245,13 +249,10 @@
         "hideMethod": "fadeOut"
     }
 </script>
-{snippet notifications}
-    <script type="text/javascript">
-        toastr.remove();
+<script type="text/javascript">
         {foreach $flashes as $flash}
         toastr[{$flash->type}]({$flash->message});
         {/foreach}
-    </script>
-{/snippet}
+</script>
 </body>
 </html>

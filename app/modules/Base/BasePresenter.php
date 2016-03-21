@@ -4,7 +4,8 @@ namespace Remit\Module\Base\Presenters;
 
 use Nette,
     Nette\Application\UI,
-    App\User;
+    App\User,
+    App\Newsletter;
 
 
 abstract class BasePresenter extends Nette\Application\UI\Presenter
@@ -70,6 +71,40 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         return $dialog;
     }
 
+    protected function createComponentNewsletterForm()
+    {
+        $form = new UI\Form;
+        $form->addText('email', 'Email')
+            ->setRequired('Musíte zadat Email!')
+            ->addRule(UI\Form::EMAIL, 'Email není ve správném tvaru!');
+        $form->addSubmit('subscribe', 'Přihlásit k odběru');
+        $form->onSubmit[] = array($this, 'newsletterFormSucceeded');
+
+        return $form;
+    }
+
+    public function newsletterFormSucceeded(UI\Form $form)
+    {
+
+        foreach ($form->errors as $error) {
+            $this->presenter->flashMessage($error, 'error');
+        }
+
+        $email = $this->EntityManager->getRepository(Newsletter::class)->findOneBy(array('email' => $form->values->email));
+
+        if (!$form->hasErrors()) {
+            if (is_null($email)) {
+                $newsletter = new Newsletter();
+                $newsletter->email = $form->values->email;
+                $this->EntityManager->persist($newsletter);
+                $this->EntityManager->flush();
+                $this->presenter->flashMessage("Váš E-mail byl úspěšně přihlášen pro odběr novinek!", 'success');
+            } else {
+                $this->presenter->flashMessage("Tento Email je již pro odběr novinek přihlášen!", 'error');
+            }
+        }
+    }
+
     protected function createComponentLoginForm()
     {
         $form = new UI\Form;
@@ -88,15 +123,14 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         try {
             $this->getUser()->login($values["username"], $values["password"]);
+
+            if ($values["remember"]) {
+                $this->getUser()->setExpiration('1 year', FALSE);
+            } else {
+                $this->getUser()->setExpiration('30 minutes', TRUE);
+            }
         } catch (Nette\Security\AuthenticationException $e) {
             $form->addError($e->getMessage());
-        }
-
-        if ($values["remember"]) {
-            $this->getUser()->setExpiration('1 year', FALSE);
-        }
-        else {
-            $this->getUser()->setExpiration('30 minutes', TRUE);
         }
     }
 
