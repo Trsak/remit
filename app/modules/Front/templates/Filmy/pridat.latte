@@ -20,7 +20,7 @@
                     </div>
                     <div class="panel-footer">
                         {foreach $moviesFound as $movieFound}
-                            <a href="">{$movieFound->names->cs}</a><br>
+                        <a href="" data-toggle="tooltip" data-placement="top" title="Přidat film"><i class="fa fa-plus fa-1"></i></a> <a href="http://www.csfd.cz/film/{$movieFound->id}" target="_blank">{$movieFound->names->cs}</a><br>
                         {/foreach}
                     </div>
                 </div>
