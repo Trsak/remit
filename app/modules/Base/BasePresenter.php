@@ -35,7 +35,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             $fb = $dialog->getFacebook();
 
             if (!$fb->getUser()) {
-                $this->flashMessage("Sorry bro, facebook authentication failed.");
+                $this->flashMessage("Přihlášení přes facebook selhalo!", "error");
                 return;
             }
 
@@ -45,16 +45,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                 $existing = $this->EntityManager->getRepository(User::class)->findOneBy(array('facebookId' => $fb->getUser()));
 
                 if (is_null($existing)) {
-                    $user = new User();
-                    $user->username = $me["name"];
-                    $user->email = "";
-                    $user->password = 0;
-                    $user->facebookId = $fb->getUser();
-                    $user->facebookToken = $fb->getAccessToken();
-                    $this->EntityManager->persist($user);
-                    $this->EntityManager->flush();
 
-                    $this->getUser()->login($me["name"], 0);
+                    $this->redirect('Prihlaseni:fb', array("data" => json_encode($me)));
                 } else {
                     $existing->facebookToken = $fb->getAccessToken();
                     $this->EntityManager->flush();
@@ -62,7 +54,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                 }
 
             } catch (\Kdyby\Facebook\FacebookApiException $e) {
-                $this->flashMessage("Sorry bro, facebook authentication failed hard.");
+                $this->flashMessage("Přihlášení přes facebook selhalo!", "error");
             }
 
             $this->redirect('this');
@@ -112,6 +104,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             ->setRequired('Musíte zadat uživatelské jméno!');
         $form->addPassword('password', 'Heslo')
             ->setRequired('Musíte zadat heslo!');
+        $form->addHidden('fbId');
         $form->addCheckbox('remember', 'Zapamatovat');
         $form->addSubmit('login', 'Přihlásit');
         $form->onSuccess[] = array($this, 'loginFormSucceeded');
@@ -123,6 +116,13 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         try {
             $this->getUser()->login($values["username"], $values["password"]);
+
+            if ($values["fbId"] != 0) {
+                $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('username' => $values["username"]));
+                $user->facebookId = $values["fbId"];
+                $this->EntityManager->merge($user);
+                $this->EntityManager->flush();
+            }
 
             if ($values["remember"]) {
                 $this->getUser()->setExpiration('1 year', FALSE);

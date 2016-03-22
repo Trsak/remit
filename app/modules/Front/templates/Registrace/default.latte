@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="form-group{if $form["email"]->hasErrors()} has-error{/if} input-icon-left">
                                     <i class="fa fa-envelope"></i>
-                                    <input type="email" class="form-control" n:name="email" placeholder="Email">
+                                    <input type="email" class="form-control" n:name="email" placeholder="Email" value="{if !$fbEmail}0{else}{$fbEmail}{/if}">
                                 </div>
                                 <div class="form-group{if $form["password"]->hasErrors()} has-error{/if} input-icon-left">
                                     <i class="fa fa-lock"></i>
@@ -45,6 +45,7 @@
                                 </div>
                             </div>
 
+                            <input type="hidden" n:name="fbId" value="{if !$fbId}0{else}{$fbId}{/if}">
                             <input type="submit" n:name="register" class="btn btn-primary btn-block">
 
                         {/form}

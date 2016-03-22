@@ -21,6 +21,18 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
         }
     }
 
+    public function actionDefault($data = NULL)
+    {
+        if (!is_null($data)) {
+            $data = json_decode($data, true);
+            $this->template->fbId = $data["id"];
+            $this->template->fbEmail = $data["email"];
+        } else {
+            $this->template->fbId = false;
+            $this->template->fbEmail = false;
+        }
+    }
+
     protected function createComponentRegistrationForm()
     {
         $form = new UI\Form;
@@ -34,6 +46,7 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
             ->addRule(UI\Form::MIN_LENGTH, 'Heslo musí mít alespoň 3 znaky!', 3);
         $form->addPassword('passwordAgain', 'Heslo znovu')
             ->addRule(UI\Form::EQUAL, "Hesla se musí shodovat!", $form["password"]);
+        $form->addHidden('fbId');
         $form->addReCaptcha('captcha', NULL, "Musíte potvrdit, že jste člověk!");
         $form->addSubmit('register', 'Registrovat');
         $form->onSuccess[] = array($this, 'registrationFormSucceeded');
@@ -57,6 +70,11 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
             $user->username = $values["username"];
             $user->email = $values["email"];
             $user->password = NS\Passwords::hash($values["password"]);
+
+            if ($values["fbId"] != 0) {
+                $user->facebookId = $values["fbId"];
+            }
+
             $this->EntityManager->persist($user);
             $this->EntityManager->flush();
 
