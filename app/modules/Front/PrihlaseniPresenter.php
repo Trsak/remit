@@ -14,12 +14,12 @@ class PrihlaseniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
         }
     }
 
-    public function actionDefault($data = NULL) {
+    public function actionDefault($data = NULL)
+    {
         if (!is_null($data)) {
             $data = json_decode($data, true);
             $this->template->fbId = $data["id"];
-        }
-        else {
+        } else {
             $this->template->fbId = false;
         }
     }

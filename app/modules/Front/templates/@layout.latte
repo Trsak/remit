@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Remit</title>
+    <title>Remit {ifset title} - {include title|striptags}{/ifset}</title>
 
     <!-- CORE CSS -->
     <link href="{$basePath}/css/bootstrap.min.css" rel="stylesheet">
@@ -51,7 +51,7 @@
                         <span>{$user->getIdentity()->username}</span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#"><i class="fa fa-user"></i> Můj profil</a></li>
-                        <li><a href="#"><i class="fa fa-gear"></i> Nastavení</a></li>
+                        <li><a n:href="Nastaveni:"><i class="fa fa-gear"></i> Nastavení</a></li>
                         <li class="divider"></li>
                         <li><a n:href="Odhlasit:"><i class="fa fa-power-off"></i> Odhlásit</a></li>
                     </ul>
@@ -250,9 +250,9 @@
     }
 </script>
 <script type="text/javascript">
-        {foreach $flashes as $flash}
-        toastr[{$flash->type}]({$flash->message});
-        {/foreach}
+    {foreach $flashes as $flash}
+    toastr[{$flash->type}]({$flash->message});
+    {/foreach}
 </script>
 </body>
 </html>

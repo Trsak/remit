@@ -6,36 +6,42 @@
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 pull-none margin-auto">
                 <div class="panel panel-default panel-login">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-users"></i> Zaregistrovat se</h3>
+                        <h3 class="panel-title"><i class="fa fa-users"></i> {block #title}Zaregistrovat se{/block}</h3>
                     </div>
                     <div class="panel-body">
-                        <a class="btn btn-block btn-social btn-facebook"><i class="fa fa-facebook"></i> Připojit se
+                        <a n:href="fbLogin-open!" class="btn btn-block btn-social btn-facebook"><i class="fa fa-facebook"></i> Připojit se
                             pomocí facebooku</a>
                         <div class="separator"><span>nebo</span></div>
                         {form registrationForm}
-                                <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
-                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Zavřít</span></button>
-                                    <strong>Chybně zadaná data</strong><br> <ul><li n:foreach="$form->errors as $error">{$error}</li></ul>
-                                </div>
-                                <div class="form-group input-icon-left">
-                                    <i class="fa fa-user"></i>
-                                    <input type="text"
-                                           class="form-control{if $form["username"]->hasErrors()} has-error{/if}" n:name="username"
-                                           placeholder="Uživatelské jméno">
-                                </div>
-                                <div class="form-group{if $form["email"]->hasErrors()} has-error{/if} input-icon-left">
-                                    <i class="fa fa-envelope"></i>
-                                    <input type="email" class="form-control" n:name="email" placeholder="Email" value="{if !$fbEmail}0{else}{$fbEmail}{/if}">
-                                </div>
-                                <div class="form-group{if $form["password"]->hasErrors()} has-error{/if} input-icon-left">
-                                    <i class="fa fa-lock"></i>
-                                    <input type="password" class="form-control" n:name="password" placeholder="Heslo">
-                                </div>
-                                <div class="form-group{if $form["passwordAgain"]->hasErrors()} has-error{/if} input-icon-left">
-                                    <i class="fa fa-lock"></i>
-                                    <input type="password" class="form-control" n:name="passwordAgain"
-                                           placeholder="Heslo znovu">
-                                </div>
+                            <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                                <button type="button" class="close" data-dismiss="alert"><span
+                                            aria-hidden="true">&times;</span><span class="sr-only">Zavřít</span>
+                                </button>
+                                <strong>Chybně zadaná data</strong><br>
+                                <ul>
+                                    <li n:foreach="$form->errors as $error">{$error}</li>
+                                </ul>
+                            </div>
+                            <div class="form-group input-icon-left">
+                                <i class="fa fa-user"></i>
+                                <input type="text"
+                                       class="form-control{if $form["username"]->hasErrors()} has-error{/if}" n:name="username"
+                                       placeholder="Uživatelské jméno">
+                            </div>
+                            <div class="form-group{if $form["email"]->hasErrors()} has-error{/if} input-icon-left">
+                                <i class="fa fa-envelope"></i>
+                                <input type="email" class="form-control" n:name="email" placeholder="Email"
+                                       value="{if !$fbEmail}0{else}{$fbEmail}{/if}">
+                            </div>
+                            <div class="form-group{if $form["password"]->hasErrors()} has-error{/if} input-icon-left">
+                                <i class="fa fa-lock"></i>
+                                <input type="password" class="form-control" n:name="password" placeholder="Heslo">
+                            </div>
+                            <div class="form-group{if $form["passwordAgain"]->hasErrors()} has-error{/if} input-icon-left">
+                                <i class="fa fa-lock"></i>
+                                <input type="password" class="form-control" n:name="passwordAgain"
+                                       placeholder="Heslo znovu">
+                            </div>
 
                             <div class="controls form-group {if $form["captcha"]->hasErrors()} has-error{/if}">
                                 <div class="row">
