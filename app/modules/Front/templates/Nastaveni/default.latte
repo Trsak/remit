@@ -1,1 +1,28 @@
 {block content}
+<section class="bg-primary padding-top-30 padding-bottom-30">
+    <div class="container">
+        <h2 class="font-size-24 color-white font-weight-300">{block #title}Nastavení{/block}</h2>
+    </div>
+</section>
+<section class="elements">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tab-select">
+                    <ul class="nav nav-tabs">
+                        <li{if $change == "email"} class="active"{/if}><a n:href="Nastaveni:"><i class="fa fa-envelope"></i> Email</a></li>
+                        <li{if $change == "heslo"} class="active"{/if}><a n:href="Nastaveni:, change=>heslo"><i class="fa fa-key"></i> Heslo</a></li>
+                        <li{if $change == "telefon"} class="active"{/if}><a n:href="Nastaveni:, change=>telefon"><i class="fa fa-mobile"></i> Telefon</a></li>
+                        <li{if $change == "facebook"} class="active"{/if}><a n:href="Nastaveni:, change=>facebook"><i class="fa fa-facebook"></i> facebook</a></li>
+                    </ul>
+                    <div class="tab-content border-1 border-grey-300 padding-20">
+                        <div class="tab-pane fade in active">
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

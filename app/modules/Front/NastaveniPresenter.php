@@ -12,4 +12,8 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
             $this->redirect("Default:");
         }
     }
+
+    public function actionDefault($change) {
+        $this->template->change = $change;
+    }
 }

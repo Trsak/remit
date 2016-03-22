@@ -32,6 +32,11 @@ if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_
 	$adminRouter[] = new Route('admin/<presenter>/<action>', 'Default:default');
 
 	$router[] = $frontRouter = new RouteList('Front');
+	$frontRouter[] = new Route('Nastaveni[/<change>]', array(
+		'presenter' => 'Nastaveni',
+		'action' => 'default',
+		'change' => "email",
+	));
 	$frontRouter[] = new Route('<presenter>/<action>[/<id>]', 'Default:default');
 
 } else {
