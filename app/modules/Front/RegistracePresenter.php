@@ -57,7 +57,7 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
     public function registrationFormSucceeded(UI\Form $form, $values)
     {
         $username = $this->EntityManager->getRepository(User::class)->findOneBy(array('username' => $values["username"]));
-        $email = $this->EntityManager->getRepository(User::class)->findOneBy(array('username' => $values["email"]));
+        $email = $this->EntityManager->getRepository(User::class)->findOneBy(array('email' => $values["email"]));
 
         if (!is_null($username)) {
             $form["username"]->addError("Zadané uživatelské jméno již někdo využívá!");

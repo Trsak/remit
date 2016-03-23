@@ -25,8 +25,31 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->facebook = $facebook;
     }
 
+    public function startup()
+    {
+        parent::startup();
+
+        $this->template->userData = false;
+
+        if ($this->getUser()->isLoggedIn()) {
+            $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $this->getUser()->identity->getId()));
+            $this->template->userData = $user;
+        }
+    }
+
+    public function handleFbRemove()
+    {
+        $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $this->getUser()->identity->getId()));
+        $user->facebookId = 0;
+        $user->facebookToken = 0;
+        $this->EntityManager->merge($user);
+        $this->EntityManager->flush();
+
+        $this->flashMessage("Propojení s facebookem bylo úspěšně zrušeno", "success");
+    }
+
     /** @return \Kdyby\Facebook\Dialog\LoginDialog */
-    protected function createComponentFbLogin() //TODO: facebook login
+    protected function createComponentFbLogin()
     {
         $dialog = $this->facebook->createDialog('login');
         /** @var \Kdyby\Facebook\Dialog\LoginDialog $dialog */
@@ -45,12 +68,19 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                 $existing = $this->EntityManager->getRepository(User::class)->findOneBy(array('facebookId' => $fb->getUser()));
 
                 if (is_null($existing)) {
-
-                    $this->redirect('Prihlaseni:fb', array("data" => json_encode($me)));
+                    if ($this->getUser()->isLoggedIn()) {
+                        $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $this->getUser()->identity->getId()));
+                        $user->facebookId = $me->id;
+                        $user->facebookToken = $fb->getAccessToken();
+                        $this->EntityManager->merge($user);
+                        $this->EntityManager->flush();
+                    } else {
+                        $this->redirect('Prihlaseni:fb', array("data" => json_encode($me)));
+                    }
                 } else {
                     $existing->facebookToken = $fb->getAccessToken();
+                    $this->EntityManager->merge($existing);
                     $this->EntityManager->flush();
-                    $this->getUser()->login($existing->username, 0);
                 }
 
             } catch (\Kdyby\Facebook\FacebookApiException $e) {

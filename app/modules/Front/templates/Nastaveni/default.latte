@@ -10,14 +10,110 @@
             <div class="col-lg-12">
                 <div class="tab-select">
                     <ul class="nav nav-tabs">
-                        <li{if $change == "email"} class="active"{/if}><a n:href="Nastaveni:"><i class="fa fa-envelope"></i> Email</a></li>
-                        <li{if $change == "heslo"} class="active"{/if}><a n:href="Nastaveni:, change=>heslo"><i class="fa fa-key"></i> Heslo</a></li>
-                        <li{if $change == "telefon"} class="active"{/if}><a n:href="Nastaveni:, change=>telefon"><i class="fa fa-mobile"></i> Telefon</a></li>
-                        <li{if $change == "facebook"} class="active"{/if}><a n:href="Nastaveni:, change=>facebook"><i class="fa fa-facebook"></i> facebook</a></li>
+                        <li{if $change == "email"} class="active"{/if}><a n:href="Nastaveni:"><i
+                                        class="fa fa-envelope"></i> Email</a></li>
+                        <li{if $change == "heslo"} class="active"{/if}><a n:href="Nastaveni:, change=>heslo"><i
+                                        class="fa fa-lock"></i> Heslo</a></li>
+                        <li{if $change == "telefon"} class="active"{/if}><a n:href="Nastaveni:, change=>telefon"><i
+                                        class="fa fa-mobile"></i> Telefon</a></li>
+                        <li{if $change == "facebook"} class="active"{/if}><a n:href="Nastaveni:, change=>facebook"><i
+                                        class="fa fa-facebook"></i> facebook</a></li>
                     </ul>
                     <div class="tab-content border-1 border-grey-300 padding-20">
                         <div class="tab-pane fade in active">
+                            {if $change == "email"}
+                                {form emailChangeForm}
+                                    <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                                        <button type="button" class="close" data-dismiss="alert"><span
+                                                    aria-hidden="true">&times;</span><span class="sr-only">Zavřít</span>
+                                        </button>
+                                        <strong>Chybně zadaná data</strong><br>
+                                        <ul>
+                                            <li n:foreach="$form->errors as $error">{$error}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group{if $form["email"]->hasErrors()} has-error{/if} input-icon-left">
+                                        <i class="fa fa-envelope"></i>
+                                        <input type="email" class="form-control" n:name="email"
+                                               value="{$userData->email}" placeholder="Nový email">
+                                    </div>
+                                    <div class="form-group{if $form["password"]->hasErrors()} has-error{/if} input-icon-left">
+                                        <i class="fa fa-lock"></i>
+                                        <input type="password" class="form-control" n:name="password"
+                                               placeholder="Heslo">
+                                    </div>
 
+                                    <input type="submit" n:name="change" class="btn btn-primary btn-block">
+                                {/form}
+                            {elseif $change == "heslo"}
+                                {form passwordChangeForm}
+                                    <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                                        <button type="button" class="close" data-dismiss="alert"><span
+                                                    aria-hidden="true">&times;</span><span class="sr-only">Zavřít</span>
+                                        </button>
+                                        <strong>Chybně zadaná data</strong><br>
+                                        <ul>
+                                            <li n:foreach="$form->errors as $error">{$error}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group{if $form["password"]->hasErrors()} has-error{/if} input-icon-left">
+                                        <i class="fa fa-lock"></i>
+                                        <input type="password" class="form-control" n:name="password"
+                                               placeholder="Heslo">
+                                    </div>
+                                    <div class="form-group{if $form["passwordNew"]->hasErrors()} has-error{/if} input-icon-left">
+                                        <i class="fa fa-lock"></i>
+                                        <input type="password" class="form-control" n:name="passwordNew"
+                                               placeholder="Nové heslo">
+                                    </div>
+                                    <div class="form-group{if $form["passwordNewAgain"]->hasErrors()} has-error{/if} input-icon-left">
+                                        <i class="fa fa-lock"></i>
+                                        <input type="password" class="form-control" n:name="passwordNewAgain"
+                                               placeholder="Nové heslo znovu">
+                                    </div>
+
+                                    <input type="submit" n:name="change" class="btn btn-primary btn-block">
+                                {/form}
+                            {elseif $change == "telefon"}
+                                {form phoneChangeForm}
+                                    <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                                        <button type="button" class="close" data-dismiss="alert"><span
+                                                    aria-hidden="true">&times;</span><span class="sr-only">Zavřít</span>
+                                        </button>
+                                        <strong>Chybně zadaná data</strong><br>
+                                        <ul>
+                                            <li n:foreach="$form->errors as $error">{$error}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group{if $form["phone"]->hasErrors()} has-error{/if} input-icon-left">
+                                        <i class="fa fa-mobile"></i>
+                                        <input type="text" class="form-control bfh-phone"
+                                               data-country="CZ" n:name="phone"
+                                               placeholder="Telefon">
+                                    </div>
+                                    <div class="form-group{if $form["password"]->hasErrors()} has-error{/if} input-icon-left">
+                                        <i class="fa fa-lock"></i>
+                                        <input type="password" class="form-control" n:name="password"
+                                               placeholder="Heslo">
+                                    </div>
+
+                                    <input type="submit" n:name="change" class="btn btn-primary btn-block">
+                                {/form}
+                            {elseif $change == "facebook"}
+                                {if $userData->facebookId == 0}
+                                    <div class="alert alert-danger">
+                                        Váš účet aktuálně není propojený s facebook účtem!
+                                    </div>
+                                    <a n:href="fbLogin-open!" class="btn btn-block btn-social btn-facebook"><i
+                                                class="fa fa-facebook"></i> Připojit se
+                                        pomocí facebooku</a>
+                                {else}
+                                    <div class="alert alert-success">
+                                        Váš účet je aktuálně propojený s facebook účtem.
+                                    </div>
+                                    <a n:href="fbRemove!" class="btn btn-primary btn-block">Zrušit propojení</a>
+                                {/if}
+                            {/if}
                         </div>
                     </div>
                 </div>
