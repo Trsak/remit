@@ -95,7 +95,8 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
     { //TODO: Zpracování a ověření telefonu
         $form = new UI\Form;
         $form->addText('phone', 'Telefon')
-            ->setRequired('Musíte zadat telefon!');
+            ->setRequired('Musíte zadat telefon!')
+            ->addRule(UI\Form::PATTERN, 'Prosím zadejte telefon ve správném tvaru!', '^(\+420)? ?[1-9][0-9]{2}?[0-9]{3}?[0-9]{3}');
         $form->addPassword('password', 'Heslo')
             ->setRequired('Musíte zadat heslo!')
             ->addRule(UI\Form::MIN_LENGTH, 'Heslo musí mít alespoň 3 znaky!', 3);
