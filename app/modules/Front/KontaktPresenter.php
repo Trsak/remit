@@ -10,7 +10,7 @@ class KontaktPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
     protected function createComponentContactForm()
     {
-        $form = new UI\Form;//TODO: Email aktuálně přilhášeného uživatele
+        $form = new UI\Form;
         $form->addText('email', 'Email')
             ->setRequired('Musíte zadat Email!')
             ->addRule(UI\Form::EMAIL, 'Email není ve správném tvaru!');
