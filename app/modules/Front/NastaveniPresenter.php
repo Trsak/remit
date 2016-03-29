@@ -4,9 +4,11 @@ namespace Remit\Module\Front\Presenters;
 
 use Nette\Application\UI,
     App\User,
+    App\Code,
     Nette\Security as NS,
     Remit\Sms,
-    Remit\Codes;
+    Remit\Codes,
+    Nette\Utils\Image;
 
 class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
@@ -20,6 +22,14 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
     public function actionDefault($change)
     {
         $this->template->change = $change;
+        $this->template->code = false;
+
+        if ($this->getParameter("change") == "telefon") {
+            $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id));
+            if (!is_null($code)) {
+                $this->template->code = true;
+            }
+        }
     }
 
     protected function createComponentEmailChangeForm()
@@ -94,7 +104,7 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
     }
 
     protected function createComponentPhoneChangeForm()
-    { //TODO: Zpracování a ověření telefonu
+    {
         $form = new UI\Form;
         $form->addText('phone', 'Telefon')
             ->setRequired('Musíte zadat telefon!')
@@ -110,15 +120,79 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
     public function phoneChangeFormSucceeded(UI\Form $form, $values)
     {
-        if (!NS\Passwords::verify($values["password"], $this->template->userData->password)) {
+        if (!NS\Passwords::verify($values->password, $this->template->userData->password)) {
             $form["password"]->addError("Špatně zadané heslo!");
         }
 
         if (!$form->hasErrors()) {
             $phone = explode(" ", $values->phone);
 
-            Sms::send("Vas kod pro potvrzeni telefonu na webu remit: " . Codes::randomCode() ." ", $phone[1]);
+            $code = new Codes($this->getUser()->id, 1, $phone[1], $this->EntityManager);
+
+            Sms::send("Vas kod pro potvrzeni telefonu na webu remit: " . $code->code . " ", $phone[1]);
             $this->flashMessage("Byl vám zaslán kód pro potvrení vašeho telefonu!");
+            $this->redirect("this");
         }
+    }
+
+    protected function createComponentPhoneConfirmForm()
+    {
+        $form = new UI\Form;
+        $form->addText('code', 'Potvrzovací kód')
+            ->setRequired('Musíte zadat potvrzovací kód!');
+        $form->addSubmit('confirm', 'Potvrdit telefon');
+        $form->onSuccess[] = array($this, 'phoneConfirmFormSucceeded');
+
+        return $form;
+    }
+
+    public function phoneConfirmFormSucceeded(UI\Form $form, $values)
+    {
+        $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id, 'code' => $values->code));
+
+        if (is_null($code)) {
+            $form["code"]->addError("Špatně zadaný kód!");
+        }
+
+        if (!$form->hasErrors()) {
+            $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $this->getUser()->id));
+            $user->phone = $code->data;
+
+            $this->EntityManager->remove($code);
+            $this->EntityManager->flush();
+
+            $this->flashMessage("Váš telefon byl úspěšně změněn!", "success");
+            $this->redirect("this");
+        }
+    }
+
+    public function handleRemoveCode()
+    {
+        $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id));
+        $this->EntityManager->remove($code);
+        $this->EntityManager->flush();
+
+        $this->flashMessage("Potvrzení telefonu bylo zrušeno!");
+        $this->redirect("this");
+    }
+
+    protected function createComponentAvatarForm()
+    {
+        $form = new UI\Form;
+        $form->addUpload('avatar', 'Avatar')
+            ->addRule(UI\Form::IMAGE, 'Avatar musí být JPEG, PNG nebo GIF.')
+            ->addRule(UI\Form::MAX_FILE_SIZE, 'Maximální velikost souboru je 1 MB.', 1 * 1024 * 1024);
+        $form->onSuccess[] = array($this, 'avatarFormSucceeded');
+
+        return $form;
+    }
+
+    public function avatarFormSucceeded(UI\Form $form, $values)
+    {
+        $image = Image::fromFile($values->avatar);
+        $image->resize(160, 160, Image::STRETCH);
+        $image->sharpen();
+
+        $image->save('img/user/'.$this->getUser()->id.'.jpg', 100, Image::JPEG);
     }
 }

@@ -48,7 +48,7 @@
             {if $user->isLoggedIn()}
                 <div class="nav-profile dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img
-                                src="{$basePath}/img/user/avatar.jpg" alt="">
+                                src="{$basePath}/img/user/{if $avatar}{$userData->id}{else}avatar{/if}.jpg" alt="">
                         <span>{$user->getIdentity()->username}</span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#"><i class="fa fa-user"></i> Můj profil</a></li>

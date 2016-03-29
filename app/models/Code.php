@@ -22,6 +22,11 @@ class Code extends \Kdyby\Doctrine\Entities\BaseEntity
     protected $code;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $data;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $user;

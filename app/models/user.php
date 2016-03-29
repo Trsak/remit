@@ -34,6 +34,11 @@ class User extends \Kdyby\Doctrine\Entities\BaseEntity
     /**
      * @ORM\Column(type="string")
      */
+    protected $phone = 0;
+
+    /**
+     * @ORM\Column(type="string")
+     */
     protected $facebookId = 0;
 
     /**

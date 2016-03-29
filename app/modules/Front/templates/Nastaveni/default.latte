@@ -77,30 +77,59 @@
                                     <input type="submit" n:name="change" class="btn btn-primary btn-block">
                                 {/form}
                             {elseif $change == "telefon"}
-                                {form phoneChangeForm}
-                                    <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
-                                        <button type="button" class="close" data-dismiss="alert"><span
-                                                    aria-hidden="true">&times;</span><span class="sr-only">Zavřít</span>
-                                        </button>
-                                        <strong>Chybně zadaná data</strong><br>
-                                        <ul>
-                                            <li n:foreach="$form->errors as $error">{$error}</li>
-                                        </ul>
-                                    </div>
-                                    <div class="form-group{if $form["phone"]->hasErrors()} has-error{/if} input-icon-left">
-                                        <i class="fa fa-mobile"></i>
-                                        <input type="text" class="form-control bfh-phone"
-                                               data-country="CZ" n:name="phone"
-                                               placeholder="Telefon">
-                                    </div>
-                                    <div class="form-group{if $form["password"]->hasErrors()} has-error{/if} input-icon-left">
-                                        <i class="fa fa-lock"></i>
-                                        <input type="password" class="form-control" n:name="password"
-                                               placeholder="Heslo">
-                                    </div>
+                                {if $code}
+                                    {form phoneConfirmForm}
+                                        <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                                            <button type="button" class="close" data-dismiss="alert"><span
+                                                        aria-hidden="true">&times;</span><span
+                                                        class="sr-only">Zavřít</span>
+                                            </button>
+                                            <strong>Chybně zadaná data</strong><br>
+                                            <ul>
+                                                <li n:foreach="$form->errors as $error">{$error}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="form-group{if $form["code"]->hasErrors()} has-error{/if} input-icon-left">
+                                            <i class="fa fa-code"></i>
+                                            <input type="text" class="form-control" n:name="code"
+                                                   placeholder="Potvrzovací kód">
+                                        </div>
 
-                                    <input type="submit" n:name="change" class="btn btn-primary btn-block">
-                                {/form}
+                                        <div class="col-md-6">
+                                            <input type="submit" n:name="confirm" class="btn btn-primary btn-block">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a n:href="removeCode!" class="btn btn-danger btn-block">Zrušit</a>
+                                        </div>
+                                    {/form}
+                                {else}
+                                    {form phoneChangeForm}
+                                        <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                                            <button type="button" class="close" data-dismiss="alert"><span
+                                                        aria-hidden="true">&times;</span><span
+                                                        class="sr-only">Zavřít</span>
+                                            </button>
+                                            <strong>Chybně zadaná data</strong><br>
+                                            <ul>
+                                                <li n:foreach="$form->errors as $error">{$error}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="form-group{if $form["phone"]->hasErrors()} has-error{/if} input-icon-left">
+                                            <i class="fa fa-mobile"></i>
+                                            <input type="text" class="form-control bfh-phone"
+                                                   data-country="CZ" n:name="phone"
+                                                   placeholder="Telefon"
+                                                   value="{if $userData->phone}{$userData->phone}{/if}">
+                                        </div>
+                                        <div class="form-group{if $form["password"]->hasErrors()} has-error{/if} input-icon-left">
+                                            <i class="fa fa-lock"></i>
+                                            <input type="password" class="form-control" n:name="password"
+                                                   placeholder="Heslo">
+                                        </div>
+
+                                        <input type="submit" n:name="change" class="btn btn-primary btn-block">
+                                    {/form}
+                                {/if}
                             {elseif $change == "facebook"}
                                 {if $userData->facebookId == 0}
                                     <div class="alert alert-danger">
@@ -115,6 +144,34 @@
                                     </div>
                                     <a n:href="fbRemove!" class="btn btn-primary btn-block">Zrušit propojení</a>
                                 {/if}
+                            {elseif $change == "avatar"}
+                                <div class="alert alert-warning">Nahraný avatar bude automaticky upraven na rozměry
+                                    160x160.
+                                </div>
+
+                                <div class="profile-avatar" style="width: 130px">
+                                    <div class="thumbnail">
+                                        <img src="{$basePath}/img/user/{if $avatar}{$userData->id}{else}avatar{/if}.jpg">
+                                    </div>
+                                </div>
+                                <br>
+                                {form avatarForm}
+                                    <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                                        <button type="button" class="close" data-dismiss="alert"><span
+                                                    aria-hidden="true">&times;</span><span
+                                                    class="sr-only">Zavřít</span>
+                                        </button>
+                                        <strong>Chybně zadaná data</strong><br>
+                                        <ul>
+                                            <li n:foreach="$form->errors as $error">{$error}</li>
+                                        </ul>
+                                    </div>
+                                    <span class="btn btn-default btn-file">
+                                        <i class="fa fa-picture-o"></i> Nahrát obrázek <input type="file" n:name="avatar" onchange="this.form.submit()">
+                                    </span>
+
+                                {/form}
+
                             {/if}
                         </div>
                     </div>
