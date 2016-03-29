@@ -163,5 +163,4 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             $form->addError($e->getMessage());
         }
     }
-
 }
