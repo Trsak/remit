@@ -2,4 +2,5 @@
 log/
 temp/
 vendor/
-config.neon
+tests/
+app/config.neon

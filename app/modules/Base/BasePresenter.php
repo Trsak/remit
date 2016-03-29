@@ -81,6 +81,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                     $existing->facebookToken = $fb->getAccessToken();
                     $this->EntityManager->merge($existing);
                     $this->EntityManager->flush();
+
+                    try {
+                        $this->getUser()->login($existing->username, 0);
+                    } catch (Nette\Security\AuthenticationException $e) {
+                        $this->flashMessage("Při přihlášení nastala chyba!", "error");
+                    }
                 }
 
             } catch (\Kdyby\Facebook\FacebookApiException $e) {
