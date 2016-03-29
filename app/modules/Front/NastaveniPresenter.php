@@ -4,7 +4,9 @@ namespace Remit\Module\Front\Presenters;
 
 use Nette\Application\UI,
     App\User,
-    Nette\Security as NS;
+    Nette\Security as NS,
+    Remit\Sms,
+    Remit\Codes;
 
 class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
@@ -100,9 +102,23 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
         $form->addPassword('password', 'Heslo')
             ->setRequired('Musíte zadat heslo!')
             ->addRule(UI\Form::MIN_LENGTH, 'Heslo musí mít alespoň 3 znaky!', 3);
-        $form->addSubmit('change', 'Změnit heslo');
+        $form->addSubmit('change', 'Změnit telefon');
         $form->onSuccess[] = array($this, 'phoneChangeFormSucceeded');
 
         return $form;
+    }
+
+    public function phoneChangeFormSucceeded(UI\Form $form, $values)
+    {
+        if (!NS\Passwords::verify($values["password"], $this->template->userData->password)) {
+            $form["password"]->addError("Špatně zadané heslo!");
+        }
+
+        if (!$form->hasErrors()) {
+            $phone = explode(" ", $values->phone);
+
+            Sms::send("Vas kod pro potvrzeni telefonu na webu remit: " . Codes::randomCode() ." ", $phone[1]);
+            $this->flashMessage("Byl vám zaslán kód pro potvrení vašeho telefonu!");
+        }
     }
 }
