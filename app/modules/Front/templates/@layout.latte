@@ -50,7 +50,8 @@
                                 src="{$basePath}/img/user/{if $avatar}{$userData->id}{else}avatar{/if}.jpg" alt="">
                         <span>{$user->getIdentity()->username}</span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#"><i class="fa fa-user"></i> Můj profil</a></li>
+                        <li><a n:href="Uzivatel:, id=>$userData->id, name=>$user->getIdentity()->username"><i
+                                        class="fa fa-user"></i> Můj profil</a></li>
                         <li><a n:href="Nastaveni:"><i class="fa fa-gear"></i> Nastavení</a></li>
                         <li class="divider"></li>
                         <li><a n:href="Odhlasit:"><i class="fa fa-power-off"></i> Odhlásit</a></li>
@@ -98,10 +99,8 @@
         <div class="widget row">
             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
                 <h4 class="title">O projektu remit</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pharetra mattis arcu, a congue leo
-                    malesuada eu. Nam nec mauris ut odio tristique varius et eu metus. Quisque massa purus, aliquet quis
-                    blandit et, <br/> <br/>mollis sed lorem. Sed vel tincidunt elit. Phasellus at varius odio, sit amet
-                    fermentum mauris.</p>
+                <p>Jste filmovými fanoušky, ale s přívalem nových a nových filmů už nestíháte sledovat novinky? Pak se stačí na našem webu zaregistrovat a poté si již můžete
+                    nechat zasílat upozornění na filmy podle vašeho přání.<br/> <br/>Upozornění můžete dostávat přímo zde na webu, emailem, facebookem nebo formou SMS.</p>
             </div>
 
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -142,15 +141,15 @@
         <div class="container">
             <ul class="list-inline">
                 <li><a href="#" class="btn btn-circle btn-social-icon" data-toggle="tooltip"
-                       title="Follow us on Twitter"><i class="fa fa-twitter"></i></a></li>
+                       title="Následujte nás na twitteru!"><i class="fa fa-twitter"></i></a></li>
                 <li><a href="#" class="btn btn-circle btn-social-icon" data-toggle="tooltip"
-                       title="Follow us on Facebook"><i class="fa fa-facebook"></i></a></li>
+                       title="Následujte nás na facebooku!"><i class="fa fa-facebook"></i></a></li>
                 <li><a href="#" class="btn btn-circle btn-social-icon" data-toggle="tooltip"
-                       title="Follow us on Google"><i class="fa fa-google-plus"></i></a></li>
-                <li><a href="#" class="btn btn-circle btn-social-icon" data-toggle="tooltip" title="Follow us on Steam"><i
-                                class="fa fa-steam"></i></a></li>
+                       title="Následujte nás na Google+!"><i class="fa fa-google-plus"></i></a></li>
+                <li><a href="#" class="btn btn-circle btn-social-icon" data-toggle="tooltip"
+                       title="Následujte nás na YouTube!"><i class="fa fa-youtube-play"></i></a></li>
             </ul>
-            &copy; 2016 remit. All rights reserved.
+            &copy; 2016 remit. Všechny práva vyhrazena.
         </div>
     </div>
 </footer>

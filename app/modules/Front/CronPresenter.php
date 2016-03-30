@@ -22,15 +22,15 @@ class CronPresenter extends \Remit\Module\Base\Presenters\BasePresenter
         $channels = $dom->getElementsByTagName('channel');
 
         foreach ($channels as $channel) {
-            try {
-                $tvChannel = new TvChannel();
-                $tvChannel->id = $channel->getAttribute("id");
-                $tvChannel->name = $channel->nodeValue;
-                $this->EntityManager->persist($tvChannel);
-                $this->EntityManager->flush();
-            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+            $tvChannel = new TvChannel();
+            $tvChannel->id = trim($channel->getAttribute("id"));
+            $tvChannel->name = trim($channel->nodeValue);
+            $this->EntityManager->persist($tvChannel);
+        }
+        try {
+            $this->EntityManager->flush();
+        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
 
-            }
         }
 
         die("OK");

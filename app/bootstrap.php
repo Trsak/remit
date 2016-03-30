@@ -37,6 +37,12 @@ if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_
 		'action' => 'default',
 		'change' => "email",
 	));
+	$frontRouter[] = new Route('Uzivatel/<id [0-9]+>-<name>', array(
+		'presenter' => 'Uzivatel',
+		'action' => 'default',
+		'id' => "",
+		'name' => ""
+	));
 	$frontRouter[] = new Route('<presenter>/<action>[/<id>]', 'Default:default');
 
 } else {
