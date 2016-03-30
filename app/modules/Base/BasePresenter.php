@@ -32,11 +32,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->userData = false;
         $this->template->avatar = false;
 
+        $this->template->addFilter('count', function ($array) {
+            return count($array);
+        });
+
         if ($this->getUser()->isLoggedIn()) {
             $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $this->getUser()->identity->getId()));
             $this->template->userData = $user;
 
-            if (file_exists('./img/user/'.$this->getUser()->identity->getId().'.jpg')) {
+            if (file_exists('./img/user/' . $this->getUser()->identity->getId() . '.jpg')) {
                 $this->template->avatar = true;
             }
         }

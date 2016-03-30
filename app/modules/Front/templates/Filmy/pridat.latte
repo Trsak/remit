@@ -10,18 +10,42 @@
                     </div>
                     <div class="panel-body">
                         {form addFilmForm}
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Název filmu" n:name="name" id="srch-term">
-                            <div class="input-group-btn">
-                                <button class="btn btn-default" type="submit" n:name="search"><i class="glyphicon glyphicon-search"></i></button>
+                            <div class="alert alert-danger alert-dismissible" n:if="$form->hasErrors()">
+                                <button type="button" class="close" data-dismiss="alert"><span
+                                            aria-hidden="true">&times;</span><span class="sr-only">Zavřít</span>
+                                </button>
+                                <strong>Chybně zadaná data</strong><br>
+                                <ul>
+                                    <li n:foreach="$form->errors as $error">{$error}</li>
+                                </ul>
                             </div>
-                        </div>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Název filmu" n:name="name"
+                                       id="srch-term">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default load" data-load="Načítání filmů..." type="submit" n:name="search"><i
+                                                class="glyphicon glyphicon-search"></i></button>
+                                </div>
+                            </div>
+                            {dump $form}
                         {/form}
                     </div>
                     <div class="panel-footer">
-                        {foreach $moviesFound as $movieFound}
-                        <a href="" data-toggle="tooltip" data-placement="top" title="Přidat film"><i class="fa fa-plus fa-1"></i></a> <a href="http://www.csfd.cz/film/{$movieFound->id}" target="_blank">{$movieFound->names->cs}</a><br>
-                        {/foreach}
+                        {if !$formSubmit}
+                            <div class="alert alert-info">
+                                <strong>Zadejte název filmu pro jeho nalezení.</strong>
+                            </div>
+                        {else}
+                            <div class="alert alert-info">
+                                Bylo nalezeno <strong>{$moviesFound|count}</strong> filmů.
+                            </div>
+                            {foreach $moviesFound as $movieFound}
+                                <a n:href="addFilm! $movieFound->id" data-toggle="tooltip" data-placement="top" title="Přidat film"><i
+                                            class="fa fa-plus fa-1"></i></a> <a
+                                    href="{$movieFound->csfd_url}"
+                                    target="_blank">{$movieFound->names->cs} ({$movieFound->year})</a><br>
+                            {/foreach}
+                        {/if}
                     </div>
                 </div>
             </div>

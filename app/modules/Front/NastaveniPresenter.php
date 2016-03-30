@@ -193,6 +193,6 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
         $image->resize(160, 160, Image::STRETCH);
         $image->sharpen();
 
-        $image->save('img/user/'.$this->getUser()->id.'.jpg', 100, Image::JPEG);
+        $image->save('img/user/' . $this->getUser()->id . '.jpg', 100, Image::JPEG);
     }
 }

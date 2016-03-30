@@ -26,6 +26,7 @@
     <link href="{$basePath}/css/owl.carousel.css" rel="stylesheet">
     <link href="{$basePath}/css/toastr.min.css" rel="stylesheet">
     <link href="{$basePath}/css/bootstrap-formhelpers.min.css" rel="stylesheet">
+    <link href="{$basePath}/css/HoldOn.min.css" rel="stylesheet">
 </head>
 
 <body class="fixed-header">
@@ -99,8 +100,10 @@
         <div class="widget row">
             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
                 <h4 class="title">O projektu remit</h4>
-                <p>Jste filmovými fanoušky, ale s přívalem nových a nových filmů už nestíháte sledovat novinky? Pak se stačí na našem webu zaregistrovat a poté si již můžete
-                    nechat zasílat upozornění na filmy podle vašeho přání.<br/> <br/>Upozornění můžete dostávat přímo zde na webu, emailem, facebookem nebo formou SMS.</p>
+                <p>Jste filmovými fanoušky, ale s přívalem nových a nových filmů už nestíháte sledovat novinky? Pak se
+                    stačí na našem webu zaregistrovat a poté si již můžete
+                    nechat zasílat upozornění na filmy podle vašeho přání.<br/> <br/>Upozornění můžete dostávat přímo
+                    zde na webu, emailem, facebookem nebo formou SMS.</p>
             </div>
 
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -201,6 +204,7 @@
 <script src="{$basePath}/js/toastr.min.js"></script>
 <script src="{$basePath}/js/nette.ajax.js"></script>
 <script src="{$basePath}/js/bootstrap-formhelpers.min.js"></script>
+<script src="{$basePath}/js/HoldOn.min.js"></script>
 <script type="text/javascript">
     (function ($) {
         "use strict";
@@ -248,6 +252,15 @@
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
     }
+
+    $(".load").click(function () {
+        var options = {
+            theme: "sk-bounce",
+            message: $(this).attr("data-load")
+        };
+
+        HoldOn.open(options);
+    });
 </script>
 <script type="text/javascript">
     {foreach $flashes as $flash}
