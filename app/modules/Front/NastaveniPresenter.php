@@ -25,7 +25,7 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
         $this->template->code = false;
 
         if ($this->getParameter("change") == "telefon") {
-            $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id));
+            $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id, 'type' => 1));
             if (!is_null($code)) {
                 $this->template->code = true;
             }
@@ -148,7 +148,7 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
     public function phoneConfirmFormSucceeded(UI\Form $form, $values)
     {
-        $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id, 'code' => $values->code));
+        $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id, 'code' => $values->code, 'type' => 1));
 
         if (is_null($code)) {
             $form["code"]->addError("Špatně zadaný kód!");
@@ -168,7 +168,7 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
     public function handleRemoveCode()
     {
-        $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id));
+        $code = $this->EntityManager->getRepository(Code::class)->findOneBy(array('user' => $this->getUser()->id, 'type' => 1));
         $this->EntityManager->remove($code);
         $this->EntityManager->flush();
 
