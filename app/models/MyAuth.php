@@ -30,6 +30,13 @@ class MyAuth extends Nette\Object implements NS\IAuthenticator
             }
         }
 
+        if (NS\Passwords::needsRehash($user->password)) {
+            $user->password = NS\Passwords::hash($user->password);
+        }
+
+        $this->EntityManager->merge($user);
+        $this->EntityManager->flush();
+
         return new NS\Identity($user->id, 'user', array('username' => $user->username));
     }
 }

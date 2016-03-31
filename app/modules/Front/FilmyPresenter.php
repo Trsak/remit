@@ -2,13 +2,14 @@
 
 namespace Remit\Module\Front\Presenters;
 
-use Nette\Application\UI;
+use Nette\Application\UI,
+    Remit\Movies;
 
 class FilmyPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
     public $csfdUrl = 'http://csfdapi.cz/movie?';
 
-    public function actionPridat() //TODO: Nastylovat, přidat loading button state
+    public function actionPridat() //TODO: Nastylovat
     {
         $this->template->formSubmit = false;
         $this->template->moviesFound = [];
@@ -37,6 +38,8 @@ class FilmyPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
     public function handleAddFilm($id)
     {
+        $movie = new Movies($id, $this->EntityManager);
 
+        $this->flashMessage("Film byl úspěšně přidán!", "success");
     }
 }
