@@ -23,7 +23,8 @@
                                 <input type="text" class="form-control" placeholder="Název filmu" n:name="name"
                                        id="srch-term">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-default load" data-load="Načítání filmů..." type="submit" n:name="search"><i
+                                    <button class="btn btn-default load" data-load="Načítání filmů..."
+                                            type="submit" n:name="search"><i
                                                 class="glyphicon glyphicon-search"></i></button>
                                 </div>
                             </div>
@@ -40,7 +41,9 @@
                                 Bylo nalezeno <strong>{$moviesFound|count}</strong> filmů.
                             </div>
                             {foreach $moviesFound as $movieFound}
-                                <a n:href="addFilm! $movieFound->id" data-toggle="tooltip" data-placement="top" title="Přidat film"><i
+                                <a n:href="addFilm! $movieFound->id" data-toggle="tooltip" data-placement="top"
+                                                                     class=" load" data-load="Přidávání filmu..."
+                                                                     title="Přidat film"><i
                                             class="fa fa-plus fa-1"></i></a> <a
                                     href="{$movieFound->csfd_url}"
                                     target="_blank">{$movieFound->names->cs} ({$movieFound->year})</a><br>

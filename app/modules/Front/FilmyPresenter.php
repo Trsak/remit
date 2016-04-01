@@ -41,5 +41,6 @@ class FilmyPresenter extends \Remit\Module\Base\Presenters\BasePresenter
         $movie = new Movies($id, $this->EntityManager);
 
         $this->flashMessage("Film byl úspěšně přidán!", "success");
+        $this->redirect('this');
     }
 }

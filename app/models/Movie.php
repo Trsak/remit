@@ -73,4 +73,9 @@ class Movie extends \Kdyby\Doctrine\Entities\BaseEntity
      * @ORM\Column(type="string")
      */
     protected $csfdUrl;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $apiUrl;
 }
