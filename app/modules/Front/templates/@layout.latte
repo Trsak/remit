@@ -86,8 +86,10 @@
 
 <div class="modal-search">
     <div class="container">
-        <input type="text" class="form-control" placeholder="Hledat...">
-        <i class="fa fa-times close"></i>
+        {form movieSearchForm}
+            <input n:name="name" type="text" class="form-control" placeholder="Zadejte název filmu...">
+            <i class="fa fa-times close"></i>
+        {/form}
     </div>
 </div><!-- /.modal-search -->
 
@@ -114,18 +116,18 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <ul class="nav">
-                            <li><a href="#">Komedie</a></li>
-                            <li><a href="#">Komedie</a></li>
-                            <li><a href="#">Komedie</a></li>
-                            <li><a href="#">Komedie</a></li>
+                            <li><a n:href="Filmy:, search => true, genre => 35">Komedie</a></li>
+                            <li><a n:href="Filmy:, search => true, genre => 16">Animovaný</a></li>
+                            <li><a n:href="Filmy:, search => true, genre => 27">Horor</a></li>
+                            <li><a n:href="Filmy:, search => true, genre => 10749">Romantický</a></li>
                         </ul>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <ul class="nav">
-                            <li><a href="#">Komedie</a></li>
-                            <li><a href="#">Komedie</a></li>
-                            <li><a href="#">Komedie</a></li>
-                            <li><a href="#">Komedie</a></li>
+                            <li><a n:href="Filmy:, search => true, genre => 878">Sci-Fi</a></li>
+                            <li><a n:href="Filmy:, search => true, genre => 28">Akční</a></li>
+                            <li><a n:href="Filmy:, search => true, genre => 14">Fantasy</a></li>
+                            <li><a n:href="Filmy:, search => true, genre => 99">Dokumentární</a></li>
                         </ul>
                     </div>
                 </div>
@@ -160,44 +162,6 @@
     </div>
 </footer>
 <!-- /.footer -->
-
-<div id="signin" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title"><i class="fa fa-user"></i> Přihlásit se</h3>
-            </div>
-            <div class="modal-body">
-                <a class="btn btn-block btn-social btn-facebook"><i class="fa fa-facebook"></i> Připojit se pomocí
-                    facebooku</a>
-                <div class="separator"><span>nebo</span></div>
-                <form>
-                    <div class="form-group input-icon-left">
-                        <i class="fa fa-user"></i>
-                        <input type="text" class="form-control" name="username" placeholder="Username">
-                    </div>
-                    <div class="form-group input-icon-left">
-                        <i class="fa fa-lock"></i>
-                        <input type="password" class="form-control" name="password" placeholder="Password">
-                    </div>
-                    <button type="button" class="btn btn-primary btn-block">Sign In</button>
-
-                    <div class="form-actions">
-                        <div class="checkbox">
-                            <input type="checkbox" id="checkbox">
-                            <label for="checkbox">Zapamatovat</label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer text-left">
-                Ještě nemáte účet? <a href="register.html">Zaregistrovat se</a>
-            </div>
-        </div>
-    </div>
-</div><!-- /.modal -->
-
 <!-- Javascript -->
 <script src="{$basePath}/js/jquery-1.11.1.min.js"></script>
 <script src="{$basePath}/js/bootstrap.min.js"></script>
@@ -224,12 +188,12 @@
             itemsMobile: false // itemsMobile disabled - inherit from itemsTablet option
         });
 
-        $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+        $(document).delegate('*[data-toggle="lightbox"]', 'click', function (event) {
             event.preventDefault();
             $(this).ekkoLightbox();
         });
 
-        $(window).scroll(function(){
+        $(window).scroll(function () {
             if ($(this).scrollTop() > 400) {
                 $('body').addClass('fixed-tab');
             } else {
@@ -241,26 +205,26 @@
             easing: 'easeOutBounce',
             barColor: '#5eb404',
             trackColor: '#e3e3e3',
-            onStep: function(from, to, percent) {
+            onStep: function (from, to, percent) {
                 $(this.el).find('.percent').text(Math.round(percent));
             }
         });
 
-        setTimeout(function(){
-            $('.progress-animation .progress-bar').each(function() {
+        setTimeout(function () {
+            $('.progress-animation .progress-bar').each(function () {
                 var me = $(this);
                 var perc = me.attr("aria-valuenow");
                 var current_perc = 0;
-                var progress = setInterval(function() {
-                    if (current_perc>=perc) {
+                var progress = setInterval(function () {
+                    if (current_perc >= perc) {
                         clearInterval(progress);
                     } else {
-                        current_perc +=1;
-                        me.css('width', (current_perc)+'%');
+                        current_perc += 1;
+                        me.css('width', (current_perc) + '%');
                     }
                 }, 0);
             });
-        },0);
+        }, 0);
 
         $(".next").click(function () {
             owl.trigger('owl.next');

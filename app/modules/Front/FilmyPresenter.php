@@ -7,7 +7,7 @@ use Nette\Application\UI,
 
 class FilmyPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
-    public function actionDefault()
+    public function actionDefault($search = false, $name = '', $genre = '')
     {
         $token = new \Tmdb\ApiToken($this->context->parameters["movies"]["apiKey"]);
         $client = new \Tmdb\Client($token, ['secure' => false]);
@@ -16,12 +16,26 @@ class FilmyPresenter extends \Remit\Module\Base\Presenters\BasePresenter
         $paginator = $visualPaginator->getPaginator();
         $paginator->itemsPerPage = 20;
 
+        $this->template->filters = [];
+
         $page = 1;
         if (isset($paginator->page)) {
             $page = $paginator->getPage();
         }
 
-        $movies = $client->getMoviesApi()->getTopRated(array('page' => $page, 'language' => 'cs'));
+        if (!$search) {
+            $movies = $client->getMoviesApi()->getTopRated(array('page' => $page, 'language' => 'cs'));
+        }
+        else {
+            if ($name) {
+                $movies = $client->getSearchApi()->searchMovies($name, array('language' => 'cs'));
+                $this->template->filters["name"] = $name;
+            }
+            elseif ($genre) {
+                $movies = $client->getGenresApi()->getMovies($genre, array('language' => 'cs'));
+                $this->template->filters["genre"] = $genre;
+            }
+        }
 
         $this->template->movies = $movies["results"];
         $this->template->moviesCount = $movies["total_results"];
