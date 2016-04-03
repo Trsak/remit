@@ -1,14 +1,15 @@
 {block content}
-{dump $movieCredits}
 <section class="hero height-350 hero-game"
-         style="background-image: url(https://image.tmdb.org/t/p/w1920{$movieImages['backdrops'][0]['file_path']});background-size: cover;background-repeat: no-repeat;background-position: center center;">
+         style="background-image: url(https://image.tmdb.org/t/p/w1920{$movie["backdrop_path"]});background-size: cover;background-repeat: no-repeat;background-position: center center;">
     <div class="hero-bg"></div>
     <div class="container">
         <div class="page-header">
             <div class="page-title">{$movie["title"]}</div>
+            {if $movieVideos["results"]}
             <a href="http://www.youtube.com/watch?v={$movieVideos["results"][0]["key"]}"
                class="btn btn-success margin-top-30 text-initial"
                data-toggle="lightbox" data-width="1280"><i class="fa fa-video-camera"></i> Zobrazit trailer</a>
+            {/if}
             <a href="#" class="btn btn-primary"><i
                         class="fa fa-bell-o"></i> Nastavit upozornění</a>
         </div>
@@ -23,6 +24,8 @@
                                 class="fa fa-info-circle"></i> Informace</a></li>
                 <li{if $page == 'obsazeni'} class="active"{/if}><a n:href="Film:, id=>$movie['id'], page=>'obsazeni'"><i
                                 class="fa fa-users"></i> Obsazení</a></li>
+                <li{if $page == 'tvurci'} class="active"{/if}><a n:href="Film:, id=>$movie['id'], page=>'tvurci'"><i
+                                class="fa fa-users"></i> Tvůrci</a></li>
                 <li{if $page == 'videa'} class="active"{/if}><a n:href="Film:, id=>$movie['id'], page=>'videa'"><i
                                 class="fa fa-video-camera"></i> Videa</a></li>
                 <li{if $page == 'obrazky'} class="active"{/if}><a n:href="Film:, id=>$movie['id'], page=>'obrazky'"><i
@@ -40,7 +43,7 @@
                     <div class="post-header">
                         <div class="post-title">
                             <h2>
-                                <a href="#">{block #title}{$movie["title"]}{if $page == 'videa'} - Videa{elseif $page == 'obrazky'} - Obrázky{elseif $page == 'obsazeni'} - Obsazení{/if}{/block}</a>
+                                <a href="#">{block #title}{$movie["title"]}{if $page == 'videa'} - Videa{elseif $page == 'obrazky'} - Obrázky{elseif $page == 'obsazeni'} - Obsazení{elseif $page == 'tvurci'} - Tvůrci{/if}{/block}</a>
                             </h2>
                         </div>
                     </div>
@@ -56,18 +59,18 @@
                         <h3>Základní údaje</h3>
                         <p>
                             <strong>Žánry:</strong> {$genres}<br>
-                            <strong>Datum vydání:</strong> {$movie["release_date"]|date:'%d.%m.%Y'}<br>
-                            <strong>Délka:</strong> {$movie["runtime"]} minut<br>
-                            <strong>Stav:</strong> {$movie["status"]}<br>
-                            <strong>Rozpočet:</strong> $ {$movie["budget"]|number}<br>
-                            <strong>Zisk:</strong> $ {$movie["revenue"]|number}
+                            <strong>Datum vydání:</strong> {if $movie["release_date"]}{$movie["release_date"]|date:'%d.%m.%Y'}{else}Neznámé{/if}<br>
+                            <strong>Délka:</strong> {if $movie["runtime"]}{$movie["runtime"]} minut{else}Neznámá{/if}<br>
+                            <strong>Stav:</strong> {if $movie["status"]}{$movie["status"]|translate|firstUpper}{else}Neznámý{/if}<br>
+                            <strong>Rozpočet:</strong> {if $movie["budget"]}$ {$movie["budget"]|number}{else}Neznámý{/if}<br>
+                            <strong>Zisk:</strong> {if $movie["revenue"]}$ {$movie["revenue"]|number}{else}Neznámý{/if}
                         </p>
                         <h3>Originální název</h3>
                         <p>
                             <strong>Název:</strong> {$movie["original_title"]}<br>
                             <strong>Jazyk:</strong> {$movie["original_language"]}
                         </p>
-                        <h3>Fimlové společnosti</h3>
+                        <h3>Filmové společnosti</h3>
                         <ul>
                             {foreach $movie["production_companies"] as $company}
                                 <li>{$company["name"]}</li>
@@ -95,7 +98,7 @@
                         {foreach $movieVideos["results"] as $video}
                             <div class="embed-responsive embed-responsive-16by9 margin-top-40">
                                 <iframe class="embed-responsive-item"
-                                        src="http://www.youtube.com/embed/{$video["key"]}?rel=0&amp;showinfo=0"
+                                        src="http://www.youtube.com/embed/{$video["key"]}?rel=0"
                                         allowfullscreen></iframe>
                             </div>
                         {/foreach}
@@ -151,6 +154,34 @@
                                 </a>
                             {/foreach}
                         </div>
+                    {elseif $page == 'obsazeni'}
+                        {foreach $movieCredits["cast"] as $cast}
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="card card-list">
+                                    <div class="card-img">
+                                        <img style="height: 200px !important;" src="{if $cast["profile_path"]}http://image.tmdb.org/t/p/w185{$cast["profile_path"]}{else}{$basePath}/img/noavatar.jpg{/if}" alt="{$cast["name"]}">
+                                    </div>
+                                    <div class="caption">
+                                        <h4 class="card-title">{$cast["name"]}</h4>
+                                        <p>{$cast["character"]}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {/foreach}
+                    {elseif $page == 'tvurci'}
+                        {foreach $movieCredits["crew"] as $crew}
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="card card-list">
+                                    <div class="card-img">
+                                        <img style="height: 200px !important;" src="{if $crew["profile_path"]}http://image.tmdb.org/t/p/w185{$crew["profile_path"]}{else}{$basePath}/img/noavatar.jpg{/if}" alt="{$crew["name"]}">
+                                    </div>
+                                    <div class="caption">
+                                        <h4 class="card-title">{$crew["name"]}</h4>
+                                        <p>{$crew["job"]|translate|firstUpper}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {/foreach}
                     {/if}
                 </div>
             </div>
@@ -158,7 +189,7 @@
 
             <div class="col-md-4 rightside">
                 <div class="widget widget-game"
-                     style="background-image: url(https://image.tmdb.org/t/p/w1920{$movieImages['backdrops'][0]['file_path']});">
+                     style=" {if $movieImages['backdrops']}background-image: url(https://image.tmdb.org/t/p/w1920{$movieImages['backdrops'][0]['file_path']});{/if}">
                     <div class="overlay">
                         <div class="title">{$movie["title"]}</div>
 

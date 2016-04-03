@@ -35,3 +35,7 @@ a[target="_blank"]:after {
 .genre {
     width: 15px;
 }
+
+.caption {
+    height: 100px !important;
+}

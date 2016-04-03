@@ -4,43 +4,25 @@
         <li data-target="#full-carousel" data-slide-to="0" class="active"></li>
         <li data-target="#full-carousel" data-slide-to="1"></li>
         <li data-target="#full-carousel" data-slide-to="2"></li>
+        <li data-target="#full-carousel" data-slide-to="3"></li>
+        <li data-target="#full-carousel" data-slide-to="4"></li>
     </ol>
     <div class="carousel-inner">
-        <div class="item active inactiveUntilOnLoad">
-            <img src="img/movie/1.jpg" alt="">
-            <div class="container">
-                <div class="carousel-caption">
-                    <h1 data-animation="animated animate1 fadeIn">Star Wars je tu!</h1>
-                    <p data-animation="animated animate7 fadeIn">Nenechte si ujít tak velkou podívanou!</p>
-                    <a href="#signin" data-toggle="modal" class="btn btn-primary btn-lg btn-rounded"
-                       data-animation="animated animate10 fadeIn">Získat upozornění</a>
+        {for $i = 0; $i < 5; $i++}
+            <div class="item {if $i == 0}active {/if}inactiveUntilOnLoad">
+                <img src="https://image.tmdb.org/t/p/w1920{$moviesPopular["results"][$i]["backdrop_path"]})"
+                     alt="{$moviesPopular["results"][$i]["title"]}">
+                <div class="container">
+                    <div class="carousel-caption">
+                        <h1 data-animation="animated animate1 fadeIn">{$moviesPopular["results"][$i]["title"]}</h1>
+                        <p data-animation="animated animate7 fadeIn">{$moviesPopular["results"][$i]["overview"]}</p>
+                        <a n:href="Film:, id => $moviesPopular['results'][$i]['id']"
+                                class="btn btn-primary btn-lg btn-rounded"
+                                data-animation="animated animate10 fadeIn">Zobrazit film</a>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="item">
-            <img src="img/movie/1.jpg" alt="">
-            <div class="container">
-                <div class="carousel-caption">
-                    <h1 data-animation="animated animate1 fadeIn">Star Wars je tu!</h1>
-                    <p data-animation="animated animate7 fadeIn">Nenechte si ujít tak velkou podívanou!</p>
-                    <a href="#signin" data-toggle="modal" class="btn btn-primary btn-lg btn-rounded"
-                       data-animation="animated animate10 fadeIn">Získat upozornění</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="item">
-            <img src="img/movie/1.jpg" alt="">
-            <div class="container">
-                <div class="carousel-caption">
-                    <h1 data-animation="animated animate1 fadeIn">Star Wars je tu!</h1>
-                    <p data-animation="animated animate7 fadeIn">Nenechte si ujít tak velkou podívanou!</p>
-                    <a href="#signin" data-toggle="modal" class="btn btn-primary btn-lg btn-rounded"
-                       data-animation="animated animate10 fadeIn">Získat upozornění</a>
-                </div>
-            </div>
-        </div>
+        {/for}
 
         <a class="left carousel-control" href="#full-carousel" data-slide="prev">
             <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -56,107 +38,48 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="title outline">
-                    <h4><i class="fa fa-heart"></i> Nejočekávanější filmy</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eu leo lobortis, aliquam
-                        dui.</p>
+                    <h4><i class="fa fa-heart"></i> Nejpopulárnější filmy</h4>
+                    <p>Níže najdete seznam aktuálně dvaceti nejpopulárnějších filmů.</p>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="card card-hover">
-                    <div class="card-img">
-                        <img src="img/movie/1-med.jpg" alt="">
-                        <div class="category"><span class="label label-warning">90 %</span></div>
-                        <div class="meta"><a href="games-single.html"><i class="fa fa-heart-o"></i> <span>15</span></a>
+            {foreach $moviesPopular["results"] as $movie}
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="card card-game card-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">
+                        <div class="card-header">
+                            {var $genres = ''}
+                            {foreach $movie["genre_ids"] as $genre}
+                                {var $genre = $template->genre($genre)}
+                                {var $genres  = $genres.$genre}
+                                {if !$iterator->isLast()}{var $genres  = $genres.', '}{/if}
+                            {/foreach}
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-html="true" data-placement="right"
+                               title="<strong>Popis:</strong> {$movie["overview"]}"></i>
+                            <i class="fa fa-video-camera" data-toggle="tooltip" data-html="true" data-placement="right"
+                               title="<strong>Kategorie:</strong> {$genres}"></i>
+                            <i class="fa fa-calendar" data-toggle="tooltip" data-html="true" data-placement="right"
+                               title="<strong>Datum vydání:</strong> {$movie["release_date"]}"></i>
+                        </div>
+                        <div class="card-img">
+                            <a n:href="Film:, id => $movie['id']"><img
+                                        src="https://image.tmdb.org/t/p/w500/{$movie["poster_path"]}"
+                                        class="poster-medium" alt=""></a>
+                            <div class="category"><span
+                                        class="label label-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">{$movie["vote_average"]}
+                                    /10</span></div>
+                        </div>
+                        <div class="caption">
+                            <h3 class="card-title"><a n:href="Film:, id => $movie['id']">{$movie["title"]}</a></h3>
                         </div>
                     </div>
-                    <div class="caption">
-                        <h3 class="card-title"><a href="games-single.html">Assassin's Creed Syndicate</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit cras felis mauris, accumsan.</p>
-                    </div>
                 </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="card card-hover">
-                    <div class="card-img">
-                        <img src="img/movie/1-med.jpg" alt="">
-                        <div class="category"><span class="label label-warning">90 %</span></div>
-                        <div class="meta"><a href="games-single.html"><i class="fa fa-heart-o"></i> <span>15</span></a>
-                        </div>
-                    </div>
-                    <div class="caption">
-                        <h3 class="card-title"><a href="games-single.html">Assassin's Creed Syndicate</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit cras felis mauris, accumsan.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="card card-hover">
-                    <div class="card-img">
-                        <img src="img/movie/1-med.jpg" alt="">
-                        <div class="category"><span class="label label-warning">90 %</span></div>
-                        <div class="meta"><a href="games-single.html"><i class="fa fa-heart-o"></i> <span>15</span></a>
-                        </div>
-                    </div>
-                    <div class="caption">
-                        <h3 class="card-title"><a href="games-single.html">Assassin's Creed Syndicate</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit cras felis mauris, accumsan.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="card card-hover">
-                    <div class="card-img">
-                        <img src="img/movie/1-med.jpg" alt="">
-                        <div class="category"><span class="label label-warning">90 %</span></div>
-                        <div class="meta"><a href="games-single.html"><i class="fa fa-heart-o"></i> <span>15</span></a>
-                        </div>
-                    </div>
-                    <div class="caption">
-                        <h3 class="card-title"><a href="games-single.html">Assassin's Creed Syndicate</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit cras felis mauris, accumsan.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="card card-hover">
-                    <div class="card-img">
-                        <img src="img/movie/1-med.jpg" alt="">
-                        <div class="category"><span class="label label-warning">90 %</span></div>
-                        <div class="meta"><a href="games-single.html"><i class="fa fa-heart-o"></i> <span>15</span></a>
-                        </div>
-                    </div>
-                    <div class="caption">
-                        <h3 class="card-title"><a href="games-single.html">Assassin's Creed Syndicate</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit cras felis mauris, accumsan.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="card card-hover">
-                    <div class="card-img">
-                        <img src="img/movie/1-med.jpg" alt="">
-                        <div class="category"><span class="label label-warning">90 %</span></div>
-                        <div class="meta"><a href="games-single.html"><i class="fa fa-heart-o"></i> <span>15</span></a>
-                        </div>
-                    </div>
-                    <div class="caption">
-                        <h3 class="card-title"><a href="games-single.html">Assassin's Creed Syndicate</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit cras felis mauris, accumsan.</p>
-                    </div>
-                </div>
-            </div>
+            {/foreach}
         </div>
 
-        <div class="text-center"><a href="games.html"
-                                    class="btn btn-primary btn-lg btn-shadow btn-rounded margin-top-10 margin-bottom-20">Zobrazit
-                všechny premiéry <i class="fa fa-angle-right margin-left-10"></i></a></div>
+        <div class="text-center"><a n:href="Filmy:"
+                    class="btn btn-primary btn-lg btn-shadow btn-rounded margin-top-10 margin-bottom-20">Zobrazit
+                všechny filmy <i class="fa fa-angle-right margin-left-10"></i></a></div>
     </div>
 </section>
 
@@ -165,104 +88,30 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="title outline">
-                    <h4><i class="fa fa-star"></i> Aktuálně v kinech</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eu leo lobortis, aliquam
-                        dui.</p>
+                    <h4><i class="fa fa-star"></i> Filmové novinky</h4>
+                    <p>Níže najdete seznam filmů, které můžete aktuálně vidět v kinech.</p>
                 </div>
             </div>
         </div>
         <div class="row slider">
             <div class="owl-carousel">
-                <div class="card card-list">
-                    <div class="card-img">
-                        <img src="img/review/1.jpg" alt="">
-                        <span class="label label-success">72%</span>
+                {foreach $moviesPlaying["results"] as $movie}
+                    <div class="card card-list">
+                        <div class="card-img">
+                            <img src="https://image.tmdb.org/t/p/w500/{$movie["backdrop_path"]} alt="{$movie["title"]}">
+                            <span class="label label-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">{$movie["vote_average"]}</span>
+                        </div>
+                        <div class="caption">
+                            <h4 class="card-title"><a n:href="Film:, id => $movie['id']">{$movie["title"]}</a></h4>
+                        </div>
                     </div>
-                    <div class="caption">
-                        <h4 class="card-title"><a href="reviews-single.html">Uncharted 4</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-
-                <div class="card card-list">
-                    <div class="card-img">
-                        <img src="img/review/2.jpg" alt="">
-                        <span class="label label-warning">54%</span>
-                    </div>
-                    <div class="caption">
-                        <h4 class="card-title"><a href="reviews-single.html">Hitman: Absolution</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-
-                <div class="card card-list">
-                    <div class="card-img">
-                        <img src="img/review/3.jpg" alt="">
-                        <span class="label label-danger">21%</span>
-                    </div>
-                    <div class="caption">
-                        <h4 class="card-title"><a href="reviews-single.html">Last of Us 2</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-
-                <div class="card card-list">
-                    <div class="card-img">
-                        <img src="img/review/4.jpg" alt="">
-                        <span class="label label-success">69%</span>
-                    </div>
-                    <div class="caption">
-                        <h4 class="card-title"><a href="reviews-single.html">Bioshock: Infinite</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-
-                <div class="card card-list">
-                    <div class="card-img">
-                        <img src="img/review/5.jpg" alt="">
-                        <span class="label label-success">72%</span>
-                    </div>
-                    <div class="caption">
-                        <h4 class="card-title"><a href="reviews-single.html">Grand Theft Auto 5</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-
-                <div class="card card-list">
-                    <div class="card-img">
-                        <img src="img/review/6.jpg" alt="">
-                        <span class="label label-warning">54%</span>
-                    </div>
-                    <div class="caption">
-                        <h4 class="card-title"><a href="reviews-single.html">DayZ</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
-
-                <div class="card card-list">
-                    <div class="card-img">
-                        <img src="img/review/7.jpg" alt="">
-                        <span class="label label-danger">21%</span>
-                    </div>
-                    <div class="caption">
-                        <h4 class="card-title"><a href="reviews-single.html">Liberty City</a></h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                </div>
+                {/foreach}
             </div>
             <a href="#" class="prev"><i class="fa fa-angle-left"></i></a>
             <a href="#" class="next"><i class="fa fa-angle-right"></i></a>
         </div>
+        <div class="text-center"><a n:href="Kino:"
+                    class="btn btn-primary btn-lg btn-shadow btn-rounded margin-top-10 margin-bottom-20">Zobrazit
+                přehled premiér <i class="fa fa-angle-right margin-left-10"></i></a></div>
     </div>
 </section>
-
-<div class="background-image margin-top-40"
-     style="background-image: url(http://img.youtube.com/vi/IsDX_LiJT7E/maxresdefault.jpg);">
-    <span class="background-overlay"></span>
-    <div class="container">
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item"
-                    src="https://www.youtube.com/embed/IsDX_LiJT7E?rel=0&amp;showinfo=0" allowfullscreen></iframe>
-        </div>
-    </div>
-</div>

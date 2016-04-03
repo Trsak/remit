@@ -42,6 +42,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             return $genre->genre;
         });
 
+        $this->template->addFilter('translate', function ($text) {
+            return $this->translate($text);
+        });
+
         if ($this->getUser()->isLoggedIn()) {
             $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $this->getUser()->identity->getId()));
             $this->template->userData = $user;
@@ -50,6 +54,23 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                 $this->template->avatar = true;
             }
         }
+    }
+
+    public function translate($text)
+    {
+        $text = strtolower($text);
+        $translation = array("director" => "režisér", "producer" => "producent", "original music composer" => "skladatel původní hudby", "director of photography" => "hlavní kamera",
+            "casting" => "obsazení", "production design" => "produkční designu", "writer" => "scénář", "author" => "tvůrce", "executive producer" => "výkonný producent", "set decoration" => "dekorace",
+            "adr & dubbing" => "adr & dabování", "sound recordist" => "záznam zvuku", "rigging gaffer" => "osvětlení", "cinematography" => "kinematografie", "color timer" => "časování barev",
+            "makeup artist" => "maskér", "script supervisor" => "vedoucí scénáře", "released" => "vydáno", "music" => "hudba", "screenplay" => "scénář", "art direction" => "umělecká režie",
+            "costume design" => "kostýmy", "gaffer" => "osvětlovač", "stunt coordinator" => "koodinátor kaskadérů", "visual effects editor" => "vizuální efekty", "animation" => "animace",
+            "hairstylist" => "kadeřník", "makeup department head" => "vedoucí maskérny", "production manager" => "výrobní ředitel");
+
+        if (isset($translation[$text])) {
+            return $translation[$text];
+        }
+
+        return $text;
     }
 
     public function handleFbRemove()
