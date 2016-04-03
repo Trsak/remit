@@ -27,6 +27,9 @@
     <link href="{$basePath}/css/toastr.min.css" rel="stylesheet">
     <link href="{$basePath}/css/bootstrap-formhelpers.min.css" rel="stylesheet">
     <link href="{$basePath}/css/HoldOn.min.css" rel="stylesheet">
+    <link href="{$basePath}/css/ekko-lightbox.min.css" rel="stylesheet">
+    <link href="{$basePath}/css/blueimp-gallery.min.css" rel="stylesheet">
+    <link href="{$basePath}/css/bootstrap-image-gallery.min.css" rel="stylesheet">
 </head>
 
 <body class="fixed-header">
@@ -37,7 +40,7 @@
             <div class="nav-control">
                 <ul>
                     <li><a href="{$basePath}">Hlavní</a></li>
-                    <li><a href="{$basePath}">Filmy</a></li>
+                    <li><a n:href="Filmy:">Filmy</a></li>
                     <li><a href="{$basePath}">Kino</a></li>
                     <li><a href="{$basePath}">Televize</a></li>
                     <li><a n:href="Kontakt:">Kontakt</a></li>
@@ -205,6 +208,10 @@
 <script src="{$basePath}/js/nette.ajax.js"></script>
 <script src="{$basePath}/js/bootstrap-formhelpers.min.js"></script>
 <script src="{$basePath}/js/HoldOn.min.js"></script>
+<script src="{$basePath}/js/jquery.easypiechart.min.js"></script>
+<script src="{$basePath}/js/ekko-lightbox.min.js"></script>
+<script src="{$basePath}/js/jquery.blueimp-gallery.min.js"></script>
+<script src="{$basePath}/js/bootstrap-image-gallery.min.js"></script>
 <script type="text/javascript">
     (function ($) {
         "use strict";
@@ -216,6 +223,44 @@
             itemsTablet: [600, 1], //1 items between 600 and 0
             itemsMobile: false // itemsMobile disabled - inherit from itemsTablet option
         });
+
+        $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
+
+        $(window).scroll(function(){
+            if ($(this).scrollTop() > 400) {
+                $('body').addClass('fixed-tab');
+            } else {
+                $('body').removeClass('fixed-tab');
+            }
+        });
+
+        $('.chart').easyPieChart({
+            easing: 'easeOutBounce',
+            barColor: '#5eb404',
+            trackColor: '#e3e3e3',
+            onStep: function(from, to, percent) {
+                $(this.el).find('.percent').text(Math.round(percent));
+            }
+        });
+
+        setTimeout(function(){
+            $('.progress-animation .progress-bar').each(function() {
+                var me = $(this);
+                var perc = me.attr("aria-valuenow");
+                var current_perc = 0;
+                var progress = setInterval(function() {
+                    if (current_perc>=perc) {
+                        clearInterval(progress);
+                    } else {
+                        current_perc +=1;
+                        me.css('width', (current_perc)+'%');
+                    }
+                }, 0);
+            });
+        },0);
 
         $(".next").click(function () {
             owl.trigger('owl.next');

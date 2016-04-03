@@ -23,3 +23,15 @@ a[target="_blank"]:after {
     cursor: inherit;
     display: block;
 }
+
+.card-title {
+    height: 35px;
+}
+
+.poster-medium {
+    height: 300px !important;
+}
+
+.genre {
+    width: 15px;
+}

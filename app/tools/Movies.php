@@ -75,7 +75,7 @@ class Movies
                 }
 
                 $genresDB = new MovieHasGenres();
-                $genresDB->movieId = $genreDB->getId();
+                $genresDB->movieId = $movie->getId();
                 $genresDB->genreId = $genreDB->getId();
                 $this->EntityManager->persist($genresDB);
             }

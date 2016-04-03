@@ -18,6 +18,9 @@
 		"nette/nette": "~2.3.0",
 		"kdyby/doctrine": "^3.0",
 		"kdyby/facebook": "^2.0",
-		"uestla/recaptcha-control": "3.*"
+		"uestla/recaptcha-control": "3.*",
+		"symfony/event-dispatcher": "~2.8.2",
+		"php-tmdb/api": "~2.0",
+		"ipub/visual-paginator": "@dev"
 	}
 }

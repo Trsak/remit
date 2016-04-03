@@ -3,44 +3,38 @@
 namespace Remit\Module\Front\Presenters;
 
 use Nette\Application\UI,
-    Remit\Movies;
+    IPub\VisualPaginator\Components as VisualPaginator;
 
 class FilmyPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
-    public $csfdUrl = 'http://csfdapi.cz/movie?';
-
-    public function actionPridat() //TODO: Nastylovat
+    public function actionDefault()
     {
-        $this->template->formSubmit = false;
-        $this->template->moviesFound = [];
+        $token = new \Tmdb\ApiToken($this->context->parameters["movies"]["apiKey"]);
+        $client = new \Tmdb\Client($token, ['secure' => false]);
+
+        $visualPaginator = $this['visualPaginator'];
+        $paginator = $visualPaginator->getPaginator();
+        $paginator->itemsPerPage = 20;
+
+        $page = 1;
+        if (isset($paginator->page)) {
+            $page = $paginator->getPage();
+        }
+
+        $movies = $client->getMoviesApi()->getTopRated(array('page' => $page, 'language' => 'cs'));
+
+        $this->template->movies = $movies["results"];
+        $this->template->moviesCount = $movies["total_results"];
+
+        $paginator->itemCount = $movies["total_results"];
     }
 
-    protected function createComponentAddFilmForm()
+    protected function createComponentVisualPaginator()
     {
-        $form = new UI\Form;
-        $form->addText('name', 'Zadejte název filmu')
-            ->setRequired('Musíte zadat název filmu!');
-        $form->addSubmit('search', 'Hledat');
-        $form->onSuccess[] = array($this, 'addFilmFormSucceeded');
-        $form->getElementPrototype()->novalidate('novalidate');
-        $this->template->formSubmit = true;
+        $control = new VisualPaginator\Control;
+        $control->setTemplateFile('bootstrap.latte');
+        $control->disableAjax();
 
-        return $form;
-    }
-
-    public function addFilmFormSucceeded(UI\Form $form, $values)
-    {
-        $url = $this->csfdUrl . http_build_query(array(
-                'search' => $values["name"],
-            ));
-        $this->template->moviesFound = json_decode(file_get_contents($url));
-    }
-
-    public function handleAddFilm($id)
-    {
-        $movie = new Movies($id, $this->EntityManager);
-
-        $this->flashMessage("Film byl úspěšně přidán!", "success");
-        $this->redirect('this');
+        return $control;
     }
 }

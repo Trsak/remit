@@ -1,0 +1,204 @@
+{block content}
+{dump $movieCredits}
+<section class="hero height-350 hero-game"
+         style="background-image: url(https://image.tmdb.org/t/p/w1920{$movieImages['backdrops'][0]['file_path']});background-size: cover;background-repeat: no-repeat;background-position: center center;">
+    <div class="hero-bg"></div>
+    <div class="container">
+        <div class="page-header">
+            <div class="page-title">{$movie["title"]}</div>
+            <a href="http://www.youtube.com/watch?v={$movieVideos["results"][0]["key"]}"
+               class="btn btn-success margin-top-30 text-initial"
+               data-toggle="lightbox" data-width="1280"><i class="fa fa-video-camera"></i> Zobrazit trailer</a>
+            <a href="#" class="btn btn-primary"><i
+                        class="fa fa-bell-o"></i> Nastavit upozornění</a>
+        </div>
+    </div>
+</section>
+
+<section class="bg-white no-padding hidden-xs border-bottom-1 border-grey-300" style="height: 54px">
+    <div class="tab-select sticky text-center">
+        <div class="container">
+            <ul class="nav nav-tabs">
+                <li{if $page == 'info'} class="active"{/if}><a n:href="Film:, id=>$movie['id']"><i
+                                class="fa fa-info-circle"></i> Informace</a></li>
+                <li{if $page == 'obsazeni'} class="active"{/if}><a n:href="Film:, id=>$movie['id'], page=>'obsazeni'"><i
+                                class="fa fa-users"></i> Obsazení</a></li>
+                <li{if $page == 'videa'} class="active"{/if}><a n:href="Film:, id=>$movie['id'], page=>'videa'"><i
+                                class="fa fa-video-camera"></i> Videa</a></li>
+                <li{if $page == 'obrazky'} class="active"{/if}><a n:href="Film:, id=>$movie['id'], page=>'obrazky'"><i
+                                class="fa fa-image"></i> Obrázky</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="bg-grey-50">
+    <div class="container">
+        <div class="row sidebar">
+            <div class="col-md-8 leftside">
+                <div class="post post-single">
+                    <div class="post-header">
+                        <div class="post-title">
+                            <h2>
+                                <a href="#">{block #title}{$movie["title"]}{if $page == 'videa'} - Videa{elseif $page == 'obrazky'} - Obrázky{elseif $page == 'obsazeni'} - Obsazení{/if}{/block}</a>
+                            </h2>
+                        </div>
+                    </div>
+                    {if $page == 'info'}
+                        <p>{$movie["overview"]}</p>
+
+                    {var $genres = ''}
+                        {foreach $movie["genres"] as $genre}
+                            {var $genre = $template->genre($genre)}
+                            {var $genres  = $genres.$genre}
+                            {if !$iterator->isLast()}{var $genres  = $genres.', '}{/if}
+                        {/foreach}
+                        <h3>Základní údaje</h3>
+                        <p>
+                            <strong>Žánry:</strong> {$genres}<br>
+                            <strong>Datum vydání:</strong> {$movie["release_date"]|date:'%d.%m.%Y'}<br>
+                            <strong>Délka:</strong> {$movie["runtime"]} minut<br>
+                            <strong>Stav:</strong> {$movie["status"]}<br>
+                            <strong>Rozpočet:</strong> $ {$movie["budget"]|number}<br>
+                            <strong>Zisk:</strong> $ {$movie["revenue"]|number}
+                        </p>
+                        <h3>Originální název</h3>
+                        <p>
+                            <strong>Název:</strong> {$movie["original_title"]}<br>
+                            <strong>Jazyk:</strong> {$movie["original_language"]}
+                        </p>
+                        <h3>Fimlové společnosti</h3>
+                        <ul>
+                            {foreach $movie["production_companies"] as $company}
+                                <li>{$company["name"]}</li>
+                            {/foreach}
+                        </ul>
+                        <h3>Země původu</h3>
+                        <ul>
+                            {foreach $movie["production_countries"] as $country}
+                                <li>{$country["name"]}</li>
+                            {/foreach}
+                        </ul>
+                        <h3>Použité jazyky v originálním znění</h3>
+                        <ul>
+                            {foreach $movie["spoken_languages"] as $lang}
+                                <li>{$lang["name"]} ({$lang["iso_639_1"]})</li>
+                            {/foreach}
+                        </ul>
+                        {if $movie["belongs_to_collection"]}
+                            <h3>Série filmů</h3>
+                            <p>
+                                <strong>Název:</strong> {$movie["belongs_to_collection"]["name"]}
+                            </p>
+                        {/if}
+                    {elseif $page == 'videa'}
+                        {foreach $movieVideos["results"] as $video}
+                            <div class="embed-responsive embed-responsive-16by9 margin-top-40">
+                                <iframe class="embed-responsive-item"
+                                        src="http://www.youtube.com/embed/{$video["key"]}?rel=0&amp;showinfo=0"
+                                        allowfullscreen></iframe>
+                            </div>
+                        {/foreach}
+                    {elseif $page == 'obrazky'}
+                        <div id="blueimp-gallery" class="blueimp-gallery" data-use-bootstrap-modal="false">
+                            <!-- The container for the modal slides -->
+                            <div class="slides"></div>
+                            <!-- Controls for the borderless lightbox -->
+                            <h3 class="title"></h3>
+                            <a class="prev">‹</a>
+                            <a class="next">›</a>
+                            <a class="close">×</a>
+                            <a class="play-pause"></a>
+                            <ol class="indicator"></ol>
+                            <!-- The modal dialog, which will be used to wrap the lightbox content -->
+                            <div class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title"></h4>
+                                        </div>
+                                        <div class="modal-body next"></div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default pull-left prev">
+                                                <i class="glyphicon glyphicon-chevron-left"></i>
+                                                Předchozí
+                                            </button>
+                                            <button type="button" class="btn btn-primary next">
+                                                Další
+                                                <i class="glyphicon glyphicon-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Plakáty</h3>
+                        <div id="links">
+                            {foreach $movieImages["posters"] as $poster}
+                                <a href="https://image.tmdb.org/t/p/w1920{$poster["file_path"]}"
+                                   title="Plakát k filmu {$movie["title"]}" data-gallery>
+                                    <img src="https://image.tmdb.org/t/p/w500{$poster["file_path"]}" width="100">
+                                </a>
+                            {/foreach}
+                        </div><br>
+                        <h3>Snímky</h3>
+                        <div id="links">
+                            {foreach $movieImages["backdrops"] as $backdrops}
+                                <a href="https://image.tmdb.org/t/p/w1920{$backdrops["file_path"]}"
+                                   title="Snímek z filmu {$movie["title"]}" data-gallery>
+                                    <img src="https://image.tmdb.org/t/p/w500{$backdrops["file_path"]}" width="170">
+                                </a>
+                            {/foreach}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+
+
+            <div class="col-md-4 rightside">
+                <div class="widget widget-game"
+                     style="background-image: url(https://image.tmdb.org/t/p/w1920{$movieImages['backdrops'][0]['file_path']});">
+                    <div class="overlay">
+                        <div class="title">{$movie["title"]}</div>
+
+                        <div class="chart-align">
+                            {var $percent = $movie["vote_average"]*10}
+                            <span class="chart" data-percent="{$percent}"><span class="percent"></span></span>
+                        </div>
+
+                        <span class="font-size-13"><strong>Počet hlasů: </strong>{$movie["vote_count"]}</span>
+
+                        <div class="description">
+                            {$movie["overview"]}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget widget-card">
+                    <div class="title">Podobné filmy</div>
+                    {var $pocet = count($movieAlternatives["results"])}
+                    {if $pocet > 5}{var $pocet = 5}{/if}
+                    {for $i = 0; $i < $pocet; $i++}
+                        <div class="card">
+                            <div class="card-img">
+                                <a n:href="Film:, id => $movieAlternatives['results'][$i]['id']"><img
+                                            src="https://image.tmdb.org/t/p/w500/{$movieAlternatives['results'][$i]["poster_path"]}"
+                                            alt=""></a>
+                                <div class="category"><span
+                                            class="label label-{if $movieAlternatives['results'][$i]["vote_average"] < 3.5}danger{elseif $movieAlternatives['results'][$i]["vote_average"] < 5}warning{elseif $movieAlternatives['results'][$i]["vote_average"] < 7}primary{else}success{/if}">{$movieAlternatives['results'][$i]["vote_average"]}
+                                        /10</span></div>
+                            </div>
+                            <div class="caption">
+                                <h3 class="card-title">
+                                    <a n:href="Film:, id => $movieAlternatives['results'][$i]['id']">{$movieAlternatives['results'][$i]['title']}</a>
+                                </h3>
+                            </div>
+                        </div>
+                    {/for}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

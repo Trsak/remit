@@ -15,6 +15,7 @@ extensions:
 	doctrine: Kdyby\Doctrine\DI\OrmExtension
 	facebook: Kdyby\Facebook\DI\FacebookExtension
 	reCaptcha: ReCaptchaControl\ReCaptchaExtension
+	visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension
 
 doctrine:
 	user: root
@@ -36,3 +37,7 @@ reCaptcha:
 session:
     autoStart: smart
     expiration: +1 year
+
+parameters:
+    movies:
+        apiKey: 295daa621b11855bdae43a8be7a4ce11

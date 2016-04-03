@@ -5,7 +5,8 @@ namespace Remit\Module\Base\Presenters;
 use Nette,
     Nette\Application\UI,
     App\User,
-    App\Newsletter;
+    App\Newsletter,
+    App\MovieGenres;
 
 
 abstract class BasePresenter extends Nette\Application\UI\Presenter
@@ -34,6 +35,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
         $this->template->addFilter('count', function ($array) {
             return count($array);
+        });
+
+        $this->template->addFilter('genre', function ($id) {
+            $genre = $this->EntityManager->getRepository(MovieGenres::class)->findOneBy(array('id' => $id));
+            return $genre->genre;
         });
 
         if ($this->getUser()->isLoggedIn()) {
