@@ -329,6 +329,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     protected function createComponentMovieCard()
     {
         $control = new \Remit\MovieCardControl();
+        $control->setGenres($this->genres);
         return $control;
     }
 }
