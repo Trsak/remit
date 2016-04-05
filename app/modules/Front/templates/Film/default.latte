@@ -52,7 +52,7 @@
 
                     {var $genres = ''}
                         {foreach $movie["genres"] as $genre}
-                            {var $genre = $template->genre($genre)}
+                            {var $genre = $genre["name"]}
                             {var $genres  = $genres.$genre}
                             {if !$iterator->isLast()}{var $genres  = $genres.', '}{/if}
                         {/foreach}

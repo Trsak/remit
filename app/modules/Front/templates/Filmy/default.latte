@@ -15,7 +15,8 @@
                         <div class="input-group">
                             <input n:name="name" type="text" class="form-control" placeholder="Zadejte název filmu">
                             <div class="input-group-btn">
-                                <button n:name="search" type="submit" class="btn btn-default load" data-load="Prohledávám filmy..">
+                                <button n:name="search" type="submit" class="btn btn-default load"
+                                                        data-load="Prohledávám filmy..">
                                     <span class="glyphicon glyphicon-search"></span>
                                 </button>
                             </div>
@@ -23,7 +24,8 @@
                     {/form}
                     <div class="text-center">
                         {foreach $genres as $genre}
-                            <a data-load="Načítám filmy z kategorie {$genre->genre}..." class="load margin-top-5 btn btn-default{ifset $filters["genre"]}{if $filters["genre"] == $genre->id} active{/if}{/ifset}" n:href="Filmy:, search => true, genre => $genre->id">{$genre->genre}</a>
+                            <a data-load="Načítám filmy z kategorie {$genre->genre}..."
+                               class="load margin-top-5 btn btn-default{ifset $filters["genre"]}{if $filters["genre"] == $genre->id} active{/if}{/ifset}" n:href="Filmy:, search => true, genre => $genre->id">{$genre->genre}</a>
                         {/foreach}
                     </div>
                 </div>
@@ -43,35 +45,7 @@
         </div>
         <div class="row row-eq-height">
             {foreach $movies as $movie}
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                    <div class="card card-game card-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">
-                        <div class="card-header">
-                            {var $genres = ''}
-                            {foreach $movie["genre_ids"] as $genre}
-                                {var $genre = $template->genre($genre)}
-                                {var $genres  = $genres.$genre}
-                                {if !$iterator->isLast()}{var $genres  = $genres.', '}{/if}
-                            {/foreach}
-                            <i class="fa fa-info-circle" data-toggle="tooltip" data-html="true" data-placement="right"
-                               title="<strong>Popis:</strong> {$movie["overview"]}"></i>
-                            <i class="fa fa-video-camera" data-toggle="tooltip" data-html="true" data-placement="right"
-                               title="<strong>Kategorie:</strong> {$genres}"></i>
-                            <i class="fa fa-calendar" data-toggle="tooltip" data-html="true" data-placement="right"
-                               title="<strong>Datum vydání:</strong> {$movie["release_date"]}"></i>
-                        </div>
-                        <div class="card-img">
-                            <a n:href="Film:, id => $movie['id']"><img
-                                        src="https://image.tmdb.org/t/p/w500/{$movie["poster_path"]}"
-                                        class="poster-medium" alt=""></a>
-                            <div class="category"><span
-                                        class="label label-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">{$movie["vote_average"]}
-                                    /10</span></div>
-                        </div>
-                        <div class="caption">
-                            <h3 class="card-title"><a n:href="Film:, id => $movie['id']">{$movie["title"]}</a></h3>
-                        </div>
-                    </div>
-                </div>
+                {control movieCard, $movie}
             {/foreach}
         </div>
         <div class="row text-center">

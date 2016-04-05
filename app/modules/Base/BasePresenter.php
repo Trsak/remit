@@ -47,7 +47,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         }
 
         $this->template->addFilter('genre', function ($id) {
-            return $this->genres[$id];
+            if (!isset($this->genres[$id])) {
+                return $this->genres[$id];
+            }
+            return false;
         });
 
         $this->template->addFilter('translate', function ($text) {
@@ -321,5 +324,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         $name = urldecode($this->removeAccents($values->name));
         $this->redirect('Filmy:', array('search' => true, 'name' => $name));
+    }
+
+    protected function createComponentMovieCard()
+    {
+        $control = new \Remit\MovieCardControl();
+        return $control;
     }
 }
