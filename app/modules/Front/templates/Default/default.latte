@@ -17,7 +17,8 @@
                         <h1 data-animation="animated animate1 fadeIn">{$moviesPopular["results"][$i]["title"]}</h1>
                         <p data-animation="animated animate7 fadeIn">{$moviesPopular["results"][$i]["overview"]}</p>
                         <a n:href="Film:, id => $moviesPopular['results'][$i]['id']"
-                                class="btn btn-primary btn-lg btn-rounded"
+                                class="btn btn-primary btn-lg btn-rounded load"
+                                data-load="Načítám film {$moviesPopular["results"][$i]["title"]}..."
                                 data-animation="animated animate10 fadeIn">Zobrazit film</a>
                     </div>
                 </div>
@@ -74,7 +75,7 @@
                             <span class="label label-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">{$movie["vote_average"]}</span>
                         </div>
                         <div class="caption">
-                            <h4 class="card-title"><a n:href="Film:, id => $movie['id']">{$movie["title"]}</a></h4>
+                            <h4 class="card-title load" data-load="Načítám film {$movie["title"]}..."><a n:href="Film:, id => $movie['id']">{$movie["title"]}</a></h4>
                         </div>
                     </div>
                 {/foreach}

@@ -8,22 +8,23 @@
                 {if !$iterator->isLast()}{var $genres  = $genres.', '}{/if}
             {/foreach}
             <i class="fa fa-info-circle" data-toggle="tooltip" data-html="true" data-placement="right"
-               title="<strong>Popis:</strong> {$movie["overview"]}"></i>
+               title="<strong>Popis:</strong> {if $movie["overview"]}{$movie["overview"]}{else}Neznámý{/if}"></i>
             <i class="fa fa-video-camera" data-toggle="tooltip" data-html="true" data-placement="right"
                title="<strong>Kategorie:</strong> {$genres}"></i>
             <i class="fa fa-calendar" data-toggle="tooltip" data-html="true" data-placement="right"
-               title="<strong>Datum vydání:</strong> {$movie["release_date"]}"></i>
+               title="<strong>Datum vydání:</strong> {if $movie["release_date"]}{$movie["release_date"]}{else}Neznámý{/if}"></i>
         </div>
         <div class="card-img">
-            <a href="{plink Film:, id => $movie['id']}"><img
-                        src="https://image.tmdb.org/t/p/w500/{$movie["poster_path"]}"
-                        class="poster-medium" alt=""></a>
+            <a href="{plink Film:, id => $movie['id']}" class="load" data-load="Načítám film {$movie["title"]}..."><img
+                        src="https://image.tmdb.org/t/p/w300/{$movie["poster_path"]}"
+                        class="poster-medium" alt="{$movie["title"]}"></a>
             <div class="category"><span
                         class="label label-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">{$movie["vote_average"]}
                     /10</span></div>
         </div>
         <div class="caption">
-            <h3 class="card-title"><a href="{plink Film:, id => $movie['id']}">{$movie["title"]}</a></h3>
+            <h3 class="card-title"><a href="{plink Film:, id => $movie['id']}" class="load"
+                                      data-load="Načítám film {$movie["title"]}...">{$movie["title"]}</a></h3>
         </div>
     </div>
 </div>

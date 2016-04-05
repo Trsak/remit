@@ -6,9 +6,9 @@
         <div class="page-header">
             <div class="page-title">{$movie["title"]}</div>
             {if $movieVideos["results"]}
-            <a href="http://www.youtube.com/watch?v={$movieVideos["results"][0]["key"]}"
-               class="btn btn-success margin-top-30 text-initial"
-               data-toggle="lightbox" data-width="1280"><i class="fa fa-video-camera"></i> Zobrazit trailer</a>
+                <a href="http://www.youtube.com/watch?v={$movieVideos["results"][0]["key"]}"
+                   class="btn btn-success margin-top-30 text-initial"
+                   data-toggle="lightbox" data-width="1280"><i class="fa fa-video-camera"></i> Zobrazit trailer</a>
             {/if}
             <a href="#" class="btn btn-primary"><i
                         class="fa fa-bell-o"></i> Nastavit upozornění</a>
@@ -48,7 +48,13 @@
                         </div>
                     </div>
                     {if $page == 'info'}
-                        <p>{$movie["overview"]}</p>
+                        {if !$movieImages["posters"]}
+                            <div class="alert alert-warning">
+                                Popis tohoto filmu nebyl nalezen.
+                            </div>
+                        {else}
+                            <p>{$movie["overview"]}</p>
+                        {/if}
 
                     {var $genres = ''}
                         {foreach $movie["genres"] as $genre}
@@ -59,10 +65,15 @@
                         <h3>Základní údaje</h3>
                         <p>
                             <strong>Žánry:</strong> {$genres}<br>
-                            <strong>Datum vydání:</strong> {if $movie["release_date"]}{$movie["release_date"]|date:'%d.%m.%Y'}{else}Neznámé{/if}<br>
-                            <strong>Délka:</strong> {if $movie["runtime"]}{$movie["runtime"]} minut{else}Neznámá{/if}<br>
-                            <strong>Stav:</strong> {if $movie["status"]}{$movie["status"]|translate|firstUpper}{else}Neznámý{/if}<br>
-                            <strong>Rozpočet:</strong> {if $movie["budget"]}$ {$movie["budget"]|number}{else}Neznámý{/if}<br>
+                            <strong>Datum
+                                vydání:</strong> {if $movie["release_date"]}{$movie["release_date"]|date:'%d.%m.%Y'}{else}Neznámé{/if}
+                            <br>
+                            <strong>Délka:</strong> {if $movie["runtime"]}{$movie["runtime"]} minut{else}Neznámá{/if}
+                            <br>
+                            <strong>Stav:</strong> {if $movie["status"]}{$movie["status"]|translate|firstUpper}{else}Neznámý{/if}
+                            <br>
+                            <strong>Rozpočet:</strong> {if $movie["budget"]}$ {$movie["budget"]|number}{else}Neznámý{/if}
+                            <br>
                             <strong>Zisk:</strong> {if $movie["revenue"]}$ {$movie["revenue"]|number}{else}Neznámý{/if}
                         </p>
                         <h3>Originální název</h3>
@@ -72,21 +83,39 @@
                         </p>
                         <h3>Filmové společnosti</h3>
                         <ul>
-                            {foreach $movie["production_companies"] as $company}
-                                <li>{$company["name"]}</li>
-                            {/foreach}
+                            {if !$movie["production_companies"]}
+                                <div class="alert alert-warning">
+                                    Pro tento film nebyly filmové společnosti nalezeny.
+                                </div>
+                            {else}
+                                {foreach $movie["production_companies"] as $company}
+                                    <li>{$company["name"]}</li>
+                                {/foreach}
+                            {/if}
                         </ul>
                         <h3>Země původu</h3>
                         <ul>
-                            {foreach $movie["production_countries"] as $country}
-                                <li>{$country["name"]}</li>
-                            {/foreach}
+                            {if !$movie["production_countries"]}
+                                <div class="alert alert-warning">
+                                    Pro tento film nebyly země původu nalezeny.
+                                </div>
+                            {else}
+                                {foreach $movie["production_countries"] as $country}
+                                    <li>{$country["name"]}</li>
+                                {/foreach}
+                            {/if}
                         </ul>
                         <h3>Použité jazyky v originálním znění</h3>
                         <ul>
-                            {foreach $movie["spoken_languages"] as $lang}
-                                <li>{$lang["name"]} ({$lang["iso_639_1"]})</li>
-                            {/foreach}
+                            {if !$movie["production_countries"]}
+                                <div class="alert alert-warning">
+                                    Pro tento film nebyly jazyky v originálním znění nalezeny.
+                                </div>
+                            {else}
+                                {foreach $movie["spoken_languages"] as $lang}
+                                    <li>{$lang["name"]} ({$lang["iso_639_1"]})</li>
+                                {/foreach}
+                            {/if}
                         </ul>
                         {if $movie["belongs_to_collection"]}
                             <h3>Série filmů</h3>
@@ -95,13 +124,19 @@
                             </p>
                         {/if}
                     {elseif $page == 'videa'}
-                        {foreach $movieVideos["results"] as $video}
-                            <div class="embed-responsive embed-responsive-16by9 margin-top-40">
-                                <iframe class="embed-responsive-item"
-                                        src="http://www.youtube.com/embed/{$video["key"]}?rel=0"
-                                        allowfullscreen></iframe>
+                        {if !$movieVideos["results"]}
+                            <div class="alert alert-warning">
+                                Pro tento film se nepodařilo nalézt žádná videa.
                             </div>
-                        {/foreach}
+                        {else}
+                            {foreach $movieVideos["results"] as $video}
+                                <div class="embed-responsive embed-responsive-16by9 margin-top-40">
+                                    <iframe class="embed-responsive-item"
+                                            src="http://www.youtube.com/embed/{$video["key"]}?rel=0"
+                                            allowfullscreen></iframe>
+                                </div>
+                            {/foreach}
+                        {/if}
                     {elseif $page == 'obrazky'}
                         <div id="blueimp-gallery" class="blueimp-gallery" data-use-bootstrap-modal="false">
                             <!-- The container for the modal slides -->
@@ -137,51 +172,80 @@
                             </div>
                         </div>
                         <h3>Plakáty</h3>
-                        <div id="links">
-                            {foreach $movieImages["posters"] as $poster}
-                                <a href="https://image.tmdb.org/t/p/w1920{$poster["file_path"]}"
-                                   title="Plakát k filmu {$movie["title"]}" data-gallery>
-                                    <img src="https://image.tmdb.org/t/p/w500{$poster["file_path"]}" width="100">
-                                </a>
-                            {/foreach}
-                        </div><br>
-                        <h3>Snímky</h3>
-                        <div id="links">
-                            {foreach $movieImages["backdrops"] as $backdrops}
-                                <a href="https://image.tmdb.org/t/p/w1920{$backdrops["file_path"]}"
-                                   title="Snímek z filmu {$movie["title"]}" data-gallery>
-                                    <img src="https://image.tmdb.org/t/p/w500{$backdrops["file_path"]}" width="170">
-                                </a>
-                            {/foreach}
-                        </div>
+                        {if !$movieImages["posters"]}
+                            <div class="alert alert-warning">
+                                Pro tento film se nepodařilo nalézt žádné plakáty.
+                            </div>
+                        {else}
+                            <div id="links">
+                                {foreach $movieImages["posters"] as $poster}
+                                    <a href="https://image.tmdb.org/t/p/w1920{$poster["file_path"]}"
+                                       title="Plakát k filmu {$movie["title"]}" data-gallery>
+                                        <img src="https://image.tmdb.org/t/p/w500{$poster["file_path"]}" width="100">
+                                    </a>
+                                {/foreach}
+                            </div>
+                        {/if}
+                        <br>
+                        <h3>Další obrázky</h3>
+                        {if !$movieImages["backdrops"]}
+                            <div class="alert alert-warning">
+                                Pro tento film se nepodařilo nalézt žádné obrázky.
+                            </div>
+                        {else}
+                            <div id="links">
+                                {foreach $movieImages["backdrops"] as $backdrops}
+                                    <a href="https://image.tmdb.org/t/p/w1920{$backdrops["file_path"]}"
+                                       title="Obrázek z filmu {$movie["title"]}" data-gallery>
+                                        <img src="https://image.tmdb.org/t/p/w500{$backdrops["file_path"]}" width="170">
+                                    </a>
+                                {/foreach}
+                            </div>
+                        {/if}
                     {elseif $page == 'obsazeni'}
-                        {foreach $movieCredits["cast"] as $cast}
-                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                <div class="card card-list">
-                                    <div class="card-img">
-                                        <img style="height: 200px !important;" src="{if $cast["profile_path"]}http://image.tmdb.org/t/p/w185{$cast["profile_path"]}{else}{$basePath}/img/noavatar.jpg{/if}" alt="{$cast["name"]}">
-                                    </div>
-                                    <div class="caption">
-                                        <h4 class="card-title">{$cast["name"]}</h4>
-                                        <p>{$cast["character"]}</p>
+                        {if !$movieCredits["cast"]}
+                            <div class="alert alert-warning">
+                                Pro tento film se nepodařilo nalézt obsazení.
+                            </div>
+                        {else}
+                            {foreach $movieCredits["cast"] as $cast}
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="card card-list">
+                                        <div class="card-img">
+                                            <img style="height: 200px !important;"
+                                                 src="{if $cast["profile_path"]}http://image.tmdb.org/t/p/w185{$cast["profile_path"]}{else}{$basePath}/img/noavatar.jpg{/if}"
+                                                 alt="{$cast["name"]}">
+                                        </div>
+                                        <div class="caption">
+                                            <h4 class="card-title">{$cast["name"]}</h4>
+                                            <p>{$cast["character"]}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {/foreach}
+                            {/foreach}
+                        {/if}
                     {elseif $page == 'tvurci'}
-                        {foreach $movieCredits["crew"] as $crew}
-                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                                <div class="card card-list">
-                                    <div class="card-img">
-                                        <img style="height: 200px !important;" src="{if $crew["profile_path"]}http://image.tmdb.org/t/p/w185{$crew["profile_path"]}{else}{$basePath}/img/noavatar.jpg{/if}" alt="{$crew["name"]}">
-                                    </div>
-                                    <div class="caption">
-                                        <h4 class="card-title">{$crew["name"]}</h4>
-                                        <p>{$crew["job"]|translate|firstUpper}</p>
+                        {if !$movieCredits["crew"]}
+                            <div class="alert alert-warning">
+                                Pro tento film se nepodařilo nalézt tvůrce.
+                            </div>
+                        {else}
+                            {foreach $movieCredits["crew"] as $crew}
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="card card-list">
+                                        <div class="card-img">
+                                            <img style="height: 200px !important;"
+                                                 src="{if $crew["profile_path"]}http://image.tmdb.org/t/p/w185{$crew["profile_path"]}{else}{$basePath}/img/noavatar.jpg{/if}"
+                                                 alt="{$crew["name"]}">
+                                        </div>
+                                        <div class="caption">
+                                            <h4 class="card-title">{$crew["name"]}</h4>
+                                            <p>{$crew["job"]|translate|firstUpper}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {/foreach}
+                            {/foreach}
+                        {/if}
                     {/if}
                 </div>
             </div>
@@ -208,26 +272,31 @@
 
                 <div class="widget widget-card">
                     <div class="title">Podobné filmy</div>
-                    {var $pocet = count($movieAlternatives["results"])}
-                    {if $pocet > 5}{var $pocet = 5}{/if}
-                    {for $i = 0; $i < $pocet; $i++}
-                        <div class="card">
-                            <div class="card-img">
-                                <a n:href="Film:, id => $movieAlternatives['results'][$i]['id']"><img
-                                            src="https://image.tmdb.org/t/p/w500/{$movieAlternatives['results'][$i]["poster_path"]}"
-                                            alt=""></a>
-                                <div class="category"><span
-                                            class="label label-{if $movieAlternatives['results'][$i]["vote_average"] < 3.5}danger{elseif $movieAlternatives['results'][$i]["vote_average"] < 5}warning{elseif $movieAlternatives['results'][$i]["vote_average"] < 7}primary{else}success{/if}">{$movieAlternatives['results'][$i]["vote_average"]}
-                                        /10</span></div>
-                            </div>
-                            <div class="caption">
-                                <h3 class="card-title">
-                                    <a n:href="Film:, id => $movieAlternatives['results'][$i]['id']">{$movieAlternatives['results'][$i]['title']}</a>
-                                </h3>
-                            </div>
+                    {if !$movieAlternatives["results"]}
+                        <div class="alert alert-warning">
+                            Nebyly nalezeny žádné podobné filmy.
                         </div>
-                    {/for}
-
+                    {else}
+                    {var $pocet = count($movieAlternatives["results"])}
+                        {if $pocet > 5}{var $pocet = 5}{/if}
+                        {for $i = 0; $i < $pocet; $i++}
+                            <div class="card">
+                                <div class="card-img">
+                                    <a n:href="Film:, id => $movieAlternatives['results'][$i]['id']"><img
+                                                src="https://image.tmdb.org/t/p/w500/{$movieAlternatives['results'][$i]["poster_path"]}"
+                                                alt=""></a>
+                                    <div class="category"><span
+                                                class="label label-{if $movieAlternatives['results'][$i]["vote_average"] < 3.5}danger{elseif $movieAlternatives['results'][$i]["vote_average"] < 5}warning{elseif $movieAlternatives['results'][$i]["vote_average"] < 7}primary{else}success{/if}">{$movieAlternatives['results'][$i]["vote_average"]}
+                                            /10</span></div>
+                                </div>
+                                <div class="caption">
+                                    <h3 class="card-title">
+                                        <a n:href="Film:, id => $movieAlternatives['results'][$i]['id']">{$movieAlternatives['results'][$i]['title']}</a>
+                                    </h3>
+                                </div>
+                            </div>
+                        {/for}
+                    {/if}
                 </div>
             </div>
         </div>

@@ -201,15 +201,33 @@
             }
         });
 
+        {ifCurrent Film:}
         $('.chart').easyPieChart({
+            animate: {
+                duration: 2000,
+                enabled: true
+            },
             easing: 'easeOutBounce',
-            barColor: '#5eb404',
+            barColor: function (percent) {
+                if (percent < 35) {
+                    return '#e74c3c';
+                }
+                else if (percent < 50) {
+                    return '#FF8E2B';
+                }
+                else if (percent < 70) {
+                    return '#2776dc';
+                }
+
+                return '#0E9A49';
+            },
             trackColor: '#e3e3e3',
             onStep: function (from, to, percent) {
                 $(this.el).find('.percent').text(Math.round(percent));
             }
         });
 
+        {/ifCurrent}
         setTimeout(function () {
             $('.progress-animation .progress-bar').each(function () {
                 var me = $(this);
