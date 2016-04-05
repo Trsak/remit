@@ -9,7 +9,8 @@
                         <h3 class="panel-title"><i class="fa fa-user"></i> {block #title}Přihlásit se{/block}</h3>
                     </div>
                     <div class="panel-body">
-                        <a n:href="fbLogin-open!" class="btn btn-block btn-social btn-facebook load"  data-load="Připojuji se k facebooku..."><i
+                        <a n:href="fbLogin-open!" class="btn btn-block btn-social btn-facebook load"
+                                                  data-load="Připojuji se k facebooku..."><i
                                     class="fa fa-facebook"></i> Připojit se
                             pomocí facebooku</a>
                         <div class="separator"><span>nebo</span></div>
@@ -32,6 +33,7 @@
                                 <input type="password" class="form-control" n:name="password" placeholder="Heslo">
                             </div>
                             <input type="hidden" n:name="fbId" value="{if !$fbId}0{else}{$fbId}{/if}">
+                            <input type="hidden" n:name="fbToken" value="{if !$fbToken}0{else}{$fbToken}{/if}">
                             <input type="submit" class="btn btn-primary btn-block" n:name="login">
 
                             <div class="form-actions">

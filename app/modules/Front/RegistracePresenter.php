@@ -15,14 +15,17 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
         }
     }
 
-    public function actionDefault($data = NULL)
+    public function actionDefault($data = NULL, $token = NULL)
     {
         if (!is_null($data)) {
             $data = json_decode($data, true);
+            $token = json_decode($token, true);
             $this->template->fbId = $data["id"];
+            $this->template->fbToken = $token;
             $this->template->fbEmail = $data["email"];
         } else {
             $this->template->fbId = false;
+            $this->template->fbToken = false;
             $this->template->fbEmail = false;
         }
     }
@@ -41,6 +44,7 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
         $form->addPassword('passwordAgain', 'Heslo znovu')
             ->addRule(UI\Form::EQUAL, "Hesla se musí shodovat!", $form["password"]);
         $form->addHidden('fbId');
+        $form->addHidden('fbToken');
         $form->addReCaptcha('captcha', NULL, "Musíte potvrdit, že jste člověk!");
         $form->addSubmit('register', 'Registrovat');
         $form->onSuccess[] = array($this, 'registrationFormSucceeded');
@@ -67,6 +71,7 @@ class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
             if ($values["fbId"] != 0) {
                 $user->facebookId = $values["fbId"];
+                $user->facebookToken = $values["fbToken"];
             }
 
             $this->EntityManager->persist($user);

@@ -129,7 +129,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                         $this->EntityManager->merge($user);
                         $this->EntityManager->flush();
                     } else {
-                        $this->redirect('Prihlaseni:fb', array("data" => json_encode($me)));
+                        $this->redirect('Prihlaseni:fb', array("data" => json_encode($me), "token" => json_encode($fb->getAccessToken())));
                     }
                 } else {
                     $existing->facebookToken = $fb->getAccessToken();
@@ -195,6 +195,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $form->addPassword('password', 'Heslo')
             ->setRequired('Musíte zadat heslo!');
         $form->addHidden('fbId');
+        $form->addHidden('fbToken');
         $form->addCheckbox('remember', 'Zapamatovat');
         $form->addSubmit('login', 'Přihlásit');
         $form->onSuccess[] = array($this, 'loginFormSucceeded');
@@ -210,6 +211,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             if ($values["fbId"] != 0) {
                 $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('username' => $values["username"]));
                 $user->facebookId = $values["fbId"];
+                $user->facebookToken = $values["fbToken"];
                 $this->EntityManager->merge($user);
                 $this->EntityManager->flush();
             }
