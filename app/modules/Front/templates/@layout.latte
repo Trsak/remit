@@ -30,9 +30,83 @@
     <link href="{$basePath}/css/ekko-lightbox.min.css" rel="stylesheet">
     <link href="{$basePath}/css/blueimp-gallery.min.css" rel="stylesheet">
     <link href="{$basePath}/css/bootstrap-image-gallery.min.css" rel="stylesheet">
+    <link href="{$basePath}/css/jquery.datetimepicker.css" rel="stylesheet">
 </head>
-
 <body class="fixed-header">
+{if $user->isLoggedIn()}
+    {ifCurrent Film:}
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Nastavit upozornění k filmu {$movie["title"]}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <button id="premiereButton" type="button" class="btn btn-default"><i class="fa fa-film"></i>
+                                Upozornit na premiéru
+                            </button>
+                            <button id="televisionButton" type="button" class="btn btn-default"><i
+                                        class="fa fa-television"></i> Upozornit na
+                                vysílání v TV
+                            </button>
+                        </div>
+                        <div id="premiere" style="display: none;" class="margin-top-10">
+                            {if !$movie["release_date"]}
+                                <div class="alert alert-danger">
+                                    Pro tento film není známé datum premiéry, upozornění nelze nastavit.
+                                </div>
+                            {elseif $template->afterPremiere($movie["release_date"])}
+                                <div class="alert alert-danger">
+                                    Tento film již premiéru měl, upozornění nelze nastavit!
+                                </div>
+                            {else}
+                                {form premiereNotificationForm}
+                                    <strong>Datum premiéry:</strong> {$movie["release_date"]|date:'%d.%m.%Y'}<br>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <div class="form-group input-icon-left">
+                                                <i class="fa fa-calendar-o"></i>
+                                                <input type="text" id="datetimepicker" class="form-control"
+                                                       placeholder="Vyberte čas a datum upozornění" n:name="datetime">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <strong>Upozornit pomocí:</strong>
+                                    <div class="checkbox">
+                                        <div class="checkbox checkbox-control checkbox-inline checkbox-primary">
+                                            <input type="checkbox" n:name="emailNotif" id="emailNotif">
+                                            <label for="emailNotif">Emailu</label>
+                                        </div>
+                                        {if $userData->facebookId}
+                                            <div class="checkbox checkbox-control checkbox-inline checkbox-primary">
+                                                <input type="checkbox" n:name="facebookNotif" id="facebookNotif">
+                                                <label for="facebookNotif">facebooku</label>
+                                            </div>
+                                        {/if}
+                                        {if $userData->phone}
+                                            <div class="checkbox checkbox-control checkbox-inline checkbox-primary">
+                                                <input type="checkbox" n:name="smsNotif" id="smsNotif">
+                                                <label for="smsNotif">SMS</label>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                    <input type="submit" n:name="addNotification" class="btn btn-primary btn-block">
+                                {/form}
+                            {/if}
+                        </div>
+                        <div id="notification" style="display: none;" class="margin-top-10">
+                        </div>
+                        <div id="television" style="display: none;" class="margin-top-10">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/ifCurrent}
+{/if}
 <header>
     <div class="container">
         <span class="bar hide"></span>
@@ -176,6 +250,7 @@
 <script src="{$basePath}/js/ekko-lightbox.min.js"></script>
 <script src="{$basePath}/js/jquery.blueimp-gallery.min.js"></script>
 <script src="{$basePath}/js/bootstrap-image-gallery.min.js"></script>
+<script src="{$basePath}/js/jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript">
     (function ($) {
         "use strict";
@@ -200,11 +275,11 @@
                 $('body').removeClass('fixed-tab');
             }
         });
-
+        {if $user->isLoggedIn()}
         {ifCurrent Film:}
         $('.chart').easyPieChart({
             animate: {
-                duration: 2000,
+                duration: 1000,
                 enabled: true
             },
             easing: 'easeOutBounce',
@@ -227,7 +302,35 @@
             }
         });
 
+        $("#premiereButton").click(function () {
+            setActive(this);
+            $("#premiere").show();
+        });
+
+        $("#televisionButton").click(function () {
+            setActive(this);
+            $("#television").show();
+        });
+
+        function setActive(element) {
+            $("#premiereButton").removeClass('active');
+            $("#premiere").hide();
+            $("#televisionButton").removeClass('active');
+            $("#television").hide();
+            $(element).addClass('active');
+        }
+
+        var dateMax = {$notifMaxDate};
+        var dateMin = {$notifMinDate};
+
+        jQuery.datetimepicker.setLocale('cs');
+        jQuery('#datetimepicker').datetimepicker({
+            format: 'd.m.Y H:i',
+            maxDate: dateMax,
+            minDate: dateMin,
+        });
         {/ifCurrent}
+        {/if}
         setTimeout(function () {
             $('.progress-animation .progress-bar').each(function () {
                 var me = $(this);
@@ -288,6 +391,10 @@
 
         HoldOn.open(options);
     });
+
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').focus()
+    })
 </script>
 <script type="text/javascript">
     {foreach $flashes as $flash}

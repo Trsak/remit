@@ -10,8 +10,9 @@
                    class="btn btn-success margin-top-30 text-initial"
                    data-toggle="lightbox" data-width="1280"><i class="fa fa-video-camera"></i> Zobrazit trailer</a>
             {/if}
-            <a href="#" class="btn btn-primary"><i
-                        class="fa fa-bell-o"></i> Nastavit upozornění</a>
+            <a class="btn btn-primary"{if $user->isLoggedIn()} data-toggle="modal" data-target="#myModal"{else} n:href="Prihlaseni:"{/if}><i
+                        class="fa fa-bell-o" data-toggle="modal" data-target="#setNotification"></i> Nastavit upozornění
+            </a>
         </div>
     </div>
 </section>
@@ -269,7 +270,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="widget widget-card">
                     <div class="title">Podobné filmy</div>
                     {if !$movieAlternatives["results"]}
