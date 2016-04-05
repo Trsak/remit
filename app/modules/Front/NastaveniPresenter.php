@@ -129,7 +129,7 @@ class NastaveniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
             $code = new Codes($this->getUser()->id, 1, $phone[1], $this->EntityManager);
 
-            Sms::send("Vas kod pro potvrzeni telefonu na webu remit: " . $code->code . " ", $phone[1]);
+            Sms::send("Vas kod pro potvrzeni telefonu na webu remit: " . $code->code . ".", $phone[1]);
             $this->flashMessage("Byl vám zaslán kód pro potvrení vašeho telefonu!");
             $this->redirect("this");
         }

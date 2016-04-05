@@ -6,12 +6,6 @@ use App\TvChannel;
 
 class CronPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
-    /**
-     * @inject
-     * @var \Kdyby\Doctrine\EntityManager
-     */
-    public $EntityManager;
-
     public $tv = "http://televize.sh.cvut.cz/xmltv/sit2.xml";
 
     public function actionTv()

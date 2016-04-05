@@ -71,7 +71,7 @@ class FilmPresenter extends \Remit\Module\Base\Presenters\BasePresenter
             $notification->user = $this->getUser()->id;
             $notification->type = 1;
             $notification->data = json_encode($data);
-            $notification->datetime = new \DateTime("now");
+            $notification->datetime = new \DateTime($values->datetime);
             $notification->email = $values->emailNotif;
             $notification->facebook = $values->facebookNotif;
             $notification->sms = $values->smsNotif;

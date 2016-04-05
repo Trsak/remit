@@ -6,12 +6,6 @@ use App\User;
 
 class UzivatelPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
-    /**
-     * @inject
-     * @var \Kdyby\Doctrine\EntityManager
-     */
-    public $EntityManager;
-
     public function actionDefault($id, $name)
     {
         $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $id, 'username' => $name));

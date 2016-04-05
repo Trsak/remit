@@ -136,14 +136,19 @@
                     </ul>
                 </div>
                 <div class="nav-dropdown dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <span
-                                class="label label-danger">3</span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
+                        {if $notifications}<span
+                                class="label label-danger">{count($notifications)}</span>{/if}</a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-header"><i class="fa fa-heart-o"></i> Máš 3 upozornění</li>
-                        <li><a href="#"><img src="{$basePath}/img/movie/small-1.jpg" alt=""> Alien Isolation</a></li>
-                        <li><a href="#"><img src="{$basePath}/img/movie/small-1.jpg" alt=""> Alien Isolation</a></li>
-                        <li><a href="#"><img src="{$basePath}/img/movie/small-1.jpg" alt=""> Alien Isolation</a></li>
-                        <li class="dropdown-footer"><a href="#">Zobrazit všechny upozornění</a></li>
+                        {if $notifications}
+                            <li class="dropdown-header"><i class="fa fa-bell"></i> Máš nastavené {count($notifications)}
+                                upozornění
+                            </li>
+                        {else}
+                            <li class="dropdown-header"><i class="fa fa-bell"></i> Nemáš nastavené žádné upozornění
+                            </li>
+                        {/if}
+                        <li class="dropdown-footer"><a n:href="Upozorneni:">Zobrazit všechny upozornění</a></li>
                     </ul>
                 </div>
             {else}

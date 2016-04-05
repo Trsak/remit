@@ -10,7 +10,7 @@
                    class="btn btn-success margin-top-30 text-initial"
                    data-toggle="lightbox" data-width="1280"><i class="fa fa-video-camera"></i> Zobrazit trailer</a>
             {/if}
-            <a class="btn btn-primary"{if $user->isLoggedIn()} data-toggle="modal" data-target="#myModal"{else} n:href="Prihlaseni:"{/if}><i
+            <a class="btn btn-primary"{if $user->isLoggedIn()} data-toggle="modal" data-target="#myModal"{else} href="{link Prihlaseni:}"{/if}><i
                         class="fa fa-bell-o" data-toggle="modal" data-target="#setNotification"></i> Nastavit upozornění
             </a>
         </div>

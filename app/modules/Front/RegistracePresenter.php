@@ -8,12 +8,6 @@ use Nette\Application\UI,
 
 class RegistracePresenter extends \Remit\Module\Base\Presenters\BasePresenter
 {
-    /**
-     * @inject
-     * @var \Kdyby\Doctrine\EntityManager
-     */
-    public $EntityManager;
-
     public function beforeRender()
     {
         if ($this->getUser()->isLoggedIn()) {

@@ -6,7 +6,9 @@ use Nette,
     Nette\Application\UI,
     App\User,
     App\Newsletter,
-    App\MovieGenres;
+    App\MovieGenres,
+    App\Notification,
+    Remit\Sms;
 
 
 abstract class BasePresenter extends Nette\Application\UI\Presenter
@@ -64,7 +66,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             if (file_exists('./img/user/' . $this->getUser()->identity->getId() . '.jpg')) {
                 $this->template->avatar = true;
             }
+
+            $notifications = $this->EntityManager->getRepository(Notification::class)->findBy(array('user' => $this->getUser()->identity->getId(), 'done' => 0));
+            $this->template->notifications = $notifications;
         }
+
+        $this->checkNotifications();
     }
 
     public function translate($text)
@@ -217,6 +224,59 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         }
     }
 
+    protected function createComponentMovieSearchForm()
+    {
+        $form = new UI\Form;
+        $form->addText('name', 'Název filmu');
+        $form->addSubmit('search', 'Hledat');
+        $form->onSuccess[] = array($this, 'searchFormSucceeded');
+
+        return $form;
+    }
+
+
+    public function searchFormSucceeded(UI\Form $form, $values)
+    {
+        $name = urldecode($this->removeAccents($values->name));
+        $this->redirect('Filmy:', array('search' => true, 'name' => $name));
+    }
+
+    protected function createComponentMovieCard()
+    {
+        $control = new \Remit\MovieCardControl();
+        $control->setGenres($this->genres);
+        return $control;
+    }
+
+    public function checkNotifications()
+    {
+        $token = new \Tmdb\ApiToken($this->context->parameters["movies"]["apiKey"]);
+        $client = new \Tmdb\Client($token, ['secure' => false]);
+
+        $query = $this->EntityManager->createQuery('SELECT n FROM App\Notification n WHERE n.datetime < :now')
+            ->setParameter('now', new \DateTime("now"));
+
+        $notifications = $query->getResult();
+
+        foreach ($notifications as $notification) {
+            $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $notification->user));
+            $notif = $this->EntityManager->getRepository(Notification::class)->findOneBy(array('id' => $notification->id));
+            //TODO: Dodelat Email a fb upozornění
+            if ($user) {
+                $data = json_decode($notification->data);
+                $movie = $client->getMoviesApi()->getMovie($data->movie_id, array('language' => 'cs'));
+
+                if ($notification->sms and $user->phone) {
+                    Sms::send("Pozor! Jiz " . $movie["release_date"] . " je premiera filmu " . $movie["title"] . "!", $user->phone);
+                }
+
+                $notif->done = 1;
+                $this->EntityManager->merge($notif);
+            }
+            $this->EntityManager->flush();
+        }
+    }
+
     public function removeAccents($text)
     {
         $table = Array(
@@ -307,29 +367,5 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         );
 
         return strtr($text, $table);
-    }
-
-    protected function createComponentMovieSearchForm()
-    {
-        $form = new UI\Form;
-        $form->addText('name', 'Název filmu');
-        $form->addSubmit('search', 'Hledat');
-        $form->onSuccess[] = array($this, 'searchFormSucceeded');
-
-        return $form;
-    }
-
-
-    public function searchFormSucceeded(UI\Form $form, $values)
-    {
-        $name = urldecode($this->removeAccents($values->name));
-        $this->redirect('Filmy:', array('search' => true, 'name' => $name));
-    }
-
-    protected function createComponentMovieCard()
-    {
-        $control = new \Remit\MovieCardControl();
-        $control->setGenres($this->genres);
-        return $control;
     }
 }
