@@ -253,7 +253,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $token = new \Tmdb\ApiToken($this->context->parameters["movies"]["apiKey"]);
         $client = new \Tmdb\Client($token, ['secure' => false]);
 
-        $query = $this->EntityManager->createQuery('SELECT n FROM App\Notification n WHERE n.datetime < :now')
+        $query = $this->EntityManager->createQuery('SELECT n FROM App\Notification n WHERE n.done = 0 AND n.datetime < :now')
             ->setParameter('now', new \DateTime("now"));
 
         $notifications = $query->getResult();
@@ -266,8 +266,10 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                 $data = json_decode($notification->data);
                 $movie = $client->getMoviesApi()->getMovie($data->movie_id, array('language' => 'cs'));
 
+                $date = date('d.m.Y', strtotime($movie["release_date"]));
+
                 if ($notification->sms and $user->phone) {
-                    Sms::send("Pozor! Jiz " . $movie["release_date"] . " je premiera filmu " . $movie["title"] . "!", $user->phone);
+                    Sms::send("Pozor! Jiz " . $date . " je premiera filmu " . $movie["title"] . "!", $user->phone);
                 }
 
                 $notif->done = 1;

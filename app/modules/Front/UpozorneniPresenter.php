@@ -16,7 +16,7 @@ class UpozorneniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
     public function actionDefault()
     {
-        $this->template->notificationsAll = $this->EntityManager->getRepository(Notification::class)->findBy(array('user' => $this->getUser()->identity->getId()));
+        $this->template->notificationsAll = $this->EntityManager->getRepository(Notification::class)->findBy(array('user' => $this->getUser()->identity->getId()), array('datetime' => 'DESC'));
 
         $token = new \Tmdb\ApiToken($this->context->parameters["movies"]["apiKey"]);
         $client = new \Tmdb\Client($token, ['secure' => false]);
