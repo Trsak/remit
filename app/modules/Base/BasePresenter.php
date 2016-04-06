@@ -274,6 +274,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                     Sms::send("Pozor! Jiz " . $date . " je premiera filmu " . $movie["title"] . "!", $user->phone);
                 }
 
+                if ($notification->email and $user->email) {
+                    $mail = new Message;
+                    $mail->setFrom('info@leminou.eu')
+                        ->addTo($user->email)
+                        ->setSubject("Upozornění na premiéru filmu ". $movie["title"])
+                        ->setBody("Dobrý den,<br>nezapomeňte, již " . $date . " je premiéra filmu ". $movie["title"] ."!");
+
+                    $mailer = new SendmailMailer;
+                    $mailer->send($mail);
+                }
+
                 $notif->done = 1;
                 $this->EntityManager->merge($notif);
             }

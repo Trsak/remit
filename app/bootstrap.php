@@ -10,7 +10,6 @@ include '../vendor/autoload.php';
 // Configure application
 $configurator = new Nette\Configurator;
 
-$configurator->setDebugMode(true);
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(__DIR__ . '/../log');
 
