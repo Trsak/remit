@@ -400,6 +400,20 @@
     $('#myModal').on('shown.bs.modal', function () {
         $('#myInput').focus()
     })
+
+    var basePath = {$basePath};
+
+    function imgPosterError(image) {
+        image.onerror = "";
+        image.src = basePath + "/img/noMovieImg.jpg";
+        return true;
+    }
+
+    function imgPosterSmallError(image) {
+        image.onerror = "";
+        image.src = basePath + "/img/noMovieImgSmall.jpg";
+        return true;
+    }
 </script>
 <script type="text/javascript">
     {foreach $flashes as $flash}

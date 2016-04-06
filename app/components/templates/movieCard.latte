@@ -17,7 +17,7 @@
         <div class="card-img">
             <a href="{plink Film:, id => $movie['id']}" class="load" data-load="Načítám film {$movie["title"]}..."><img
                         src="https://image.tmdb.org/t/p/w300/{$movie["poster_path"]}"
-                        class="poster-medium" alt="{$movie["title"]}"></a>
+                        onerror="imgPosterError(this);" class="poster-medium" alt="{$movie["title"]}"></a>
             <div class="category"><span
                         class="label label-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">{$movie["vote_average"]}
                     /10</span></div>

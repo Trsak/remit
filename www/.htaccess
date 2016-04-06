@@ -4,6 +4,9 @@ RewriteEngine On
 # prevents files starting with dot to be viewed by browser
 RewriteRule /\.|^\. - [F]
 
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
 # front controller
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

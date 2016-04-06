@@ -71,7 +71,7 @@
                 {foreach $moviesPlaying["results"] as $movie}
                     <div class="card card-list">
                         <div class="card-img">
-                            <img src="https://image.tmdb.org/t/p/w500/{$movie["backdrop_path"]} alt="{$movie["title"]}">
+                            <img src="https://image.tmdb.org/t/p/w500/{$movie["backdrop_path"]} alt="{$movie["title"]}" onerror="imgPosterSmallError(this);">
                             <span class="label label-{if $movie["vote_average"] < 3.5}danger{elseif $movie["vote_average"] < 5}warning{elseif $movie["vote_average"] < 7}primary{else}success{/if}">{$movie["vote_average"]}</span>
                         </div>
                         <div class="caption">
