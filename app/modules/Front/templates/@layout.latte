@@ -280,7 +280,6 @@
                 $('body').removeClass('fixed-tab');
             }
         });
-        {if $user->isLoggedIn()}
         {ifCurrent Film:}
         $('.chart').easyPieChart({
             animate: {
@@ -306,6 +305,7 @@
                 $(this.el).find('.percent').text(Math.round(percent));
             }
         });
+        {if $user->isLoggedIn()}
 
         $("#premiereButton").click(function () {
             setActive(this);
@@ -334,8 +334,8 @@
             maxDate: dateMax,
             minDate: dateMin,
         });
-        {/ifCurrent}
         {/if}
+        {/ifCurrent}
         setTimeout(function () {
             $('.progress-animation .progress-bar').each(function () {
                 var me = $(this);

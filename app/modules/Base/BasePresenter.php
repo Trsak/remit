@@ -8,7 +8,9 @@ use Nette,
     App\Newsletter,
     App\MovieGenres,
     App\Notification,
-    Remit\Sms;
+    Remit\Sms,
+    Nette\Mail\SendmailMailer,
+    Nette\Mail\Message;
 
 
 abstract class BasePresenter extends Nette\Application\UI\Presenter
@@ -144,6 +146,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                 }
 
             } catch (\Kdyby\Facebook\FacebookApiException $e) {
+                die($e->getMessage());
                 $this->flashMessage("Přihlášení přes facebook selhalo!", "error");
             }
 
@@ -278,11 +281,19 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
                     $mail = new Message;
                     $mail->setFrom('info@leminou.eu')
                         ->addTo($user->email)
-                        ->setSubject("Upozornění na premiéru filmu ". $movie["title"])
-                        ->setBody("Dobrý den,<br>nezapomeňte, již " . $date . " je premiéra filmu ". $movie["title"] ."!");
+                        ->setSubject("Upozornění na premiéru filmu " . $movie["title"])
+                        ->setHTMLBody("Dobrý den,<br>nezapomeňte, již " . $date . " je premiéra filmu " . $movie["title"] . "!");
 
                     $mailer = new SendmailMailer;
                     $mailer->send($mail);
+                }
+
+                if ($notification->facebook and $user->facebookId) {
+                    try {
+                        $this->facebook->api('/' . $user->facebookId . '/notifications', 'POST', ['access_token' => $this->facebook->accessToken, 'template' => 'Již ' . $date . ' je premiéra filmu ' . $movie["title"] . '!']);
+                    } catch
+                    (\Kdyby\Facebook\FacebookApiException $e) {
+                    }
                 }
 
                 $notif->done = 1;
@@ -292,7 +303,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         }
     }
 
-    public function removeAccents($text)
+    public
+    function removeAccents($text)
     {
         $table = Array(
             'ä' => 'a',

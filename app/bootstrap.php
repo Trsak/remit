@@ -9,7 +9,7 @@ include '../vendor/autoload.php';
 
 // Configure application
 $configurator = new Nette\Configurator;
-
+$configurator->setDebugMode('84.19.71.115');
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(__DIR__ . '/../log');
 
