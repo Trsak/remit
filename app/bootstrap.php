@@ -2,14 +2,13 @@
 
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
-use Nette\Application\Routers\SimpleRouter;
 
 
 include '../vendor/autoload.php';
 
 // Configure application
 $configurator = new Nette\Configurator;
-$configurator->setDebugMode('147.229.242.34');
+//$configurator->setDebugMode('147.229.242.34');
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(__DIR__ . '/../log');
 
@@ -22,6 +21,7 @@ $configurator->createRobotLoader()
 // Create Dependency Injection container from config.neon file
 $configurator->addConfig(__DIR__ . '/config.neon');
 $container = $configurator->createContainer();
+$container->getService("application")->errorPresenter = 'Front:Error';
 
 // Setup router using mod_rewrite detection
 $router = $container->getService('router');

@@ -36,6 +36,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         parent::startup();
 
+
         $this->template->userData = false;
         $this->template->avatar = false;
 
