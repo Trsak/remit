@@ -35,6 +35,55 @@
 </head>
 <body class="fixed-header">
 {if $user->isLoggedIn()}
+    {ifCurrent Televize:}
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        {form tvNotificationForm}
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-group input-icon-left">
+                                        <i class="fa fa-calendar-o"></i>
+                                        <input type="text" id="datetimepicker" class="form-control"
+                                               placeholder="Vyberte čas a datum upozornění" n:name="datetime">
+                                    </div>
+                                </div>
+                            </div>
+                            <strong>Upozornit pomocí:</strong>
+                            <div class="checkbox">
+                                <div class="checkbox checkbox-control checkbox-inline checkbox-primary">
+                                    <input type="checkbox" n:name="emailNotif" id="emailNotif">
+                                    <label for="emailNotif">Emailu</label>
+                                </div>
+                                {if $userData->facebookId}
+                                    <div class="checkbox checkbox-control checkbox-inline checkbox-primary">
+                                        <input type="checkbox" n:name="facebookNotif" id="facebookNotif">
+                                        <label for="facebookNotif">facebooku</label>
+                                    </div>
+                                {/if}
+                                {if $userData->phone}
+                                    <div class="checkbox checkbox-control checkbox-inline checkbox-primary">
+                                        <input type="checkbox" n:name="smsNotif" id="smsNotif">
+                                        <label for="smsNotif">SMS</label>
+                                    </div>
+                                {/if}
+                            </div>
+                            <input type="hidden" n:name="tv" id="tvHidden">
+                            <input type="hidden" n:name="start" id="startHidden">
+                            <input type="hidden" n:name="name" id="nameHidden">
+                            <input type="submit" n:name="addNotification" class="btn btn-primary btn-block">
+                        {/form}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/ifCurrent}
     {ifCurrent Film:}
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">
@@ -45,16 +94,7 @@
                         <h4 class="modal-title" id="myModalLabel">Nastavit upozornění k filmu {$movie["title"]}</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="text-center">
-                            <button id="premiereButton" type="button" class="btn btn-default"><i class="fa fa-film"></i>
-                                Upozornit na premiéru
-                            </button>
-                            <button id="televisionButton" type="button" class="btn btn-default"><i
-                                        class="fa fa-television"></i> Upozornit na
-                                vysílání v TV
-                            </button>
-                        </div>
-                        <div id="premiere" style="display: none;" class="margin-top-10">
+                        <div id="premiere">
                             {if !$movie["release_date"]}
                                 <div class="alert alert-danger">
                                     Pro tento film není známé datum premiéry, upozornění nelze nastavit.
@@ -115,7 +155,9 @@
             <div class="nav-control" id="menu">
                 <ul>
                     <li><a n:href="Default:"{ifCurrent Default:} class="active"{/ifCurrent}>Hlavní</a></li>
-                    <li><a n:href="Filmy:"{ifCurrent Filmy:} class="active"{/ifCurrent}{ifCurrent Film:} class="active"{/ifCurrent}>Filmy</a></li>
+                    <li>
+                        <a n:href="Filmy:"{ifCurrent Filmy:} class="active"{/ifCurrent}{ifCurrent Film:} class="active"{/ifCurrent}>Filmy</a>
+                    </li>
                     <li><a n:href="Kino:"{ifCurrent Kino:} class="active"{/ifCurrent}>Kino</a></li>
                     <li><a n:href="Televize:"{ifCurrent Televize:} class="active"{/ifCurrent}>Televize</a></li>
                     <li><a n:href="Kontakt:"{ifCurrent Kontakt:} class="active"{/ifCurrent}>Kontakt</a></li>
@@ -129,15 +171,16 @@
                                 src="{$basePath}/img/user/{if $avatar}{$userData->id}{else}avatar{/if}.jpg" alt="">
                         <span>{$user->getIdentity()->username}</span></a>
                     <ul class="dropdown-menu">
-                        <li><a n:href="Uzivatel:, id=>$userData->id, name=>$user->getIdentity()->username"{ifCurrent Uzivatel:*} class="active"{/ifCurrent}><i
-                                        class="fa fa-user"></i> Můj profil</a></li>
-                        <li><a n:href="Nastaveni:"{ifCurrent Nastaveni:*} class="active"{/ifCurrent}><i class="fa fa-gear"></i> Nastavení</a></li>
+                        <li><a n:href="Nastaveni:"{ifCurrent Nastaveni:*} class="active"{/ifCurrent}><i
+                                        class="fa fa-gear"></i> Nastavení</a></li>
                         <li class="divider"></li>
-                        <li><a n:href="Odhlasit:"{ifCurrent Odhlasit:*} class="active"{/ifCurrent}><i class="fa fa-power-off"></i> Odhlásit</a></li>
+                        <li><a n:href="Odhlasit:"{ifCurrent Odhlasit:*} class="active"{/ifCurrent}><i
+                                        class="fa fa-power-off"></i> Odhlásit</a></li>
                     </ul>
                 </div>
                 <div class="nav-dropdown dropdown">
-                    <a href="#"{ifCurrent Upozorneni:*} class="active"{/ifCurrent} class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
+                    <a href="#"{ifCurrent Upozorneni:*} class="active"{/ifCurrent} class="dropdown-toggle"
+                       data-toggle="dropdown"><i class="fa fa-bell"></i>
                         {if $notifications}<span
                                 class="label label-danger">{count($notifications)}</span>{/if}</a>
                     <ul class="dropdown-menu">
@@ -153,9 +196,13 @@
                     </ul>
                 </div>
             {else}
-                <a n:href="Prihlaseni:"{ifCurrent Prihlaseni:*} class="active"{/ifCurrent} data-toggle="tooltip" data-placement="bottom" title="Přihlásit se"><i
+                <a n:href="Prihlaseni:"{ifCurrent Prihlaseni:*} class="active"{/ifCurrent} data-toggle="tooltip"
+                                                                                           data-placement="bottom"
+                                                                                           title="Přihlásit se"><i
                             class="fa fa-user"></i></a>
-                <a n:href="Registrace:"{ifCurrent Registrace:*} class="active"{/ifCurrent} data-toggle="tooltip" data-placement="bottom" title="Zaregistrovat se"><i
+                <a n:href="Registrace:"{ifCurrent Registrace:*} class="active"{/ifCurrent} data-toggle="tooltip"
+                                                                                           data-placement="bottom"
+                                                                                           title="Zaregistrovat se"><i
                             class="fa fa-users"></i></a>
             {/if}
             <a href="#" data-toggle="modal-search"><i class="fa fa-search"></i></a>
@@ -307,25 +354,6 @@
             }
         });
         {if $user->isLoggedIn()}
-
-        $("#premiereButton").click(function () {
-            setActive(this);
-            $("#premiere").show();
-        });
-
-        $("#televisionButton").click(function () {
-            setActive(this);
-            $("#television").show();
-        });
-
-        function setActive(element) {
-            $("#premiereButton").removeClass('active');
-            $("#premiere").hide();
-            $("#televisionButton").removeClass('active');
-            $("#television").hide();
-            $(element).addClass('active');
-        }
-
         var dateMax = {$notifMaxDate};
         var dateMin = {$notifMinDate};
 
@@ -415,6 +443,27 @@
         image.src = basePath + "/img/noMovieImgSmall.jpg";
         return true;
     }
+
+    {ifCurrent Televize:}
+    {if $user->isLoggedIn()}
+    jQuery.datetimepicker.setLocale('cs');
+    jQuery('#datetimepicker').datetimepicker({
+        format: 'd.m.Y H:i'
+    });
+    $('#myModal').on('show.bs.modal', function (event) {
+        var lnik = $(event.relatedTarget)
+        var start = lnik.data('start')
+        var name = lnik.data('name')
+        var tv = lnik.data('tv')
+
+        var modal = $(this)
+        modal.find('.modal-title').text('Nastavit upozornění pro: ' + name)
+        modal.find('#tvHidden').val(tv);
+        modal.find('#startHidden').val(start);
+        modal.find('#nameHidden').val(name);
+    })
+    {/if}
+    {/ifCurrent}
 </script>
 <script type="text/javascript">
     {foreach $flashes as $flash}

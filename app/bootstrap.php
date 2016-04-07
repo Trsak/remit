@@ -8,7 +8,7 @@ include '../vendor/autoload.php';
 
 // Configure application
 $configurator = new Nette\Configurator;
-$configurator->setDebugMode('147.229.242.34');
+
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(__DIR__ . '/../log');
 
@@ -47,6 +47,11 @@ $frontRouter[] = new Route('Uzivatel/<id [0-9]+>-<name>', array(
     'action' => 'default',
     'id' => "",
     'name' => ""
+));
+$frontRouter[] = new Route('Televize[/<channel>]', array(
+    'presenter' => 'Televize',
+    'action' => 'default',
+    'channel' => ""
 ));
 $frontRouter[] = new Route('<presenter>/<action>[/<id>]', 'Default:default');
 

@@ -40,7 +40,7 @@ class FilmPresenter extends \Remit\Module\Base\Presenters\BasePresenter
     }
 
 
-    protected function createComponentPremiereNotificationForm() //TODO: Zkontrolovat, jestli si uživatel může poslat sms, facebook apod.
+    protected function createComponentPremiereNotificationForm()
     {
         $form = new UI\Form;
         $form->addText('datetime')

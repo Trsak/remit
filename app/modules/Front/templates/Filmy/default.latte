@@ -44,9 +44,15 @@
             </div>
         </div>
         <div class="row row-eq-height">
-            {foreach $movies as $movie}
-                {control movieCard, $movie}
-            {/foreach}
+            {if $movies}
+                {foreach $movies as $movie}
+                    {control movieCard, $movie}
+                {/foreach}
+            {else}
+                <div class="alert alert-warning">
+                    Nepodařilo se nalézt žádné filmy.
+                </div>
+            {/if}
         </div>
         <div class="row text-center">
             {control visualPaginator}

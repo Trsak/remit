@@ -36,7 +36,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         parent::startup();
 
-
         $this->template->userData = false;
         $this->template->avatar = false;
 
@@ -233,6 +232,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     protected function createComponentMovieSearchForm()
     {
         $form = new UI\Form;
+        $form->setMethod('GET');
         $form->addText('name', 'Název filmu');
         $form->addSubmit('search', 'Hledat');
         $form->onSuccess[] = array($this, 'searchFormSucceeded');
@@ -267,23 +267,38 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         foreach ($notifications as $notification) {
             $user = $this->EntityManager->getRepository(User::class)->findOneBy(array('id' => $notification->user));
             $notif = $this->EntityManager->getRepository(Notification::class)->findOneBy(array('id' => $notification->id));
-            //TODO: Dodelat Email a fb upozornění
+
             if ($user) {
                 $data = json_decode($notification->data);
-                $movie = $client->getMoviesApi()->getMovie($data->movie_id, array('language' => 'cs'));
 
-                $date = date('d.m.Y', strtotime($movie["release_date"]));
+                if ($notification->type == 2) {
+                    $movie = $data->name;
+                    $date = $data->start;
+                    $tv = $data->tv;
+                } else {
+                    $movie = $client->getMoviesApi()->getMovie($data->movie_id, array('language' => 'cs'));
+                    $date = date('d.m.Y', strtotime($movie["release_date"]));
+                }
 
                 if ($notification->sms and $user->phone) {
-                    Sms::send("Pozor! Jiz " . $date . " je premiera filmu " . $movie["title"] . "!", $user->phone);
+                    if ($notification->type == 2) {
+                        Sms::send("Pozor! Na stanici " . $tv . " jiz " . $date . " vysilaji " . $movie . "!", $user->phone);
+                    } else {
+                        Sms::send("Pozor! Jiz " . $date . " je premiera filmu " . $movie["title"] . "!", $user->phone);
+                    }
                 }
 
                 if ($notification->email and $user->email) {
                     $mail = new Message;
                     $mail->setFrom('info@leminou.eu')
-                        ->addTo($user->email)
-                        ->setSubject("Upozornění na premiéru filmu " . $movie["title"])
-                        ->setHTMLBody("Dobrý den,<br>nezapomeňte, již " . $date . " je premiéra filmu " . $movie["title"] . "!");
+                        ->addTo($user->email);
+                    if ($notification->type == 2) {
+                        $mail->setSubject("Upozornění na vysílání " . $movie)
+                            ->setHTMLBody("Dobrý den,<br>již " . $date . " se na stanici " . $tv . " bude vysílat " . $movie . "!");
+                    } else {
+                        $mail->setSubject("Upozornění na premiéru filmu " . $movie["title"])
+                            ->setHTMLBody("Dobrý den,<br>nezapomeňte, již " . $date . " je premiéra filmu " . $movie["title"] . "!");
+                    }
 
                     $mailer = new SendmailMailer;
                     $mailer->send($mail);
@@ -291,7 +306,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
                 if ($notification->facebook and $user->facebookId) {
                     try {
-                        $this->facebook->api('/' . $user->facebookId . '/notifications', 'POST', ['access_token' => $this->facebook->accessToken, 'template' => 'Již ' . $date . ' je premiéra filmu ' . $movie["title"] . '!']);
+
+                        if ($notification->type == 2) {
+                            $this->facebook->api('/' . $user->facebookId . '/notifications', 'POST', ['access_token' => $this->facebook->accessToken, 'template' => 'Již ' . $date . ' se bude na stanici ' . $tv . ' vysílat ' . $movie . '!']);
+                        } else {
+                            $this->facebook->api('/' . $user->facebookId . '/notifications', 'POST', ['access_token' => $this->facebook->accessToken, 'template' => 'Již ' . $date . ' je premiéra filmu ' . $movie["title"] . '!']);
+                        }
                     } catch
                     (\Kdyby\Facebook\FacebookApiException $e) {
                     }

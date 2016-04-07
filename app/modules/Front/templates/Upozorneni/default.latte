@@ -15,7 +15,7 @@
                             <tr>
                                 <th width="1%" style="white-space: nowrap;">#</th>
                                 <th style="white-space: nowrap;">Typ upozornění</th>
-                                <th style="white-space: nowrap;">Film</th>
+                                <th style="white-space: nowrap;">Film/Seriál</th>
                                 <th style="white-space: nowrap;">Datum a čas</th>
                                 <th width="1%" style="white-space: nowrap;">Upozornění</th>
                                 <th width="1%" style="white-space: nowrap;">Stav</th>
@@ -27,7 +27,7 @@
                                 <tr>
                                     <td>{$i+1}</td>
                                     <td width="1%" style="white-space: nowrap;">{if $notificationsAll[$i]->type == 1}Premiéra{else}Vysílání v TV{/if}</td>
-                                    <td><a n:href="Film:, id => $movies[$i]['id']">{$movies[$i]["title"]}</a></td>
+                                    <td>{if $notificationsAll[$i]->type == 1}<a n:href="Film:, id => $movies[$i]['id']">{$movies[$i]["title"]}</a>{else}{$movies[$i]}{/if}</td>
                                     <td width="1%" style="white-space: nowrap;">{$notificationsAll[$i]->datetime|date:'j. n. Y H:i'}</td>
                                     <td width="1%" style="white-space: nowrap;">
                                         {if $notificationsAll[$i]->email}

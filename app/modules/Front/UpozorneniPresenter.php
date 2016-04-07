@@ -25,7 +25,11 @@ class UpozorneniPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
         foreach ($this->template->notificationsAll as $key => $notification) {
             $data = json_decode($notification->data);
-            $movies[$key] = $client->getMoviesApi()->getMovie($data->movie_id, array('language' => 'cs'));
+            if ($notification->type == 2) {
+                $movies[$key] = $data->name;
+            } else {
+                $movies[$key] = $client->getMoviesApi()->getMovie($data->movie_id, array('language' => 'cs'));
+            }
         }
 
         $this->template->movies = $movies;
