@@ -113,11 +113,11 @@
         <nav>
             <div class="nav-control" id="menu">
                 <ul>
-                    <li><a n:href="Default:">Hlavní</a></li>
-                    <li><a n:href="Filmy:">Filmy</a></li>
-                    <li><a n:href="Kino:">Kino</a></li>
-                    <li><a n:href="Televize:">Televize</a></li>
-                    <li><a n:href="Kontakt:">Kontakt</a></li>
+                    <li><a n:href="Default:"{ifCurrent Default:} class="active"{/ifCurrent}>Hlavní</a></li>
+                    <li><a n:href="Filmy:"{ifCurrent Filmy:} class="active"{/ifCurrent}{ifCurrent Film:} class="active"{/ifCurrent}>Filmy</a></li>
+                    <li><a n:href="Kino:"{ifCurrent Kino:} class="active"{/ifCurrent}>Kino</a></li>
+                    <li><a n:href="Televize:"{ifCurrent Televize:} class="active"{/ifCurrent}>Televize</a></li>
+                    <li><a n:href="Kontakt:"{ifCurrent Kontakt:} class="active"{/ifCurrent}>Kontakt</a></li>
                 </ul>
             </div>
         </nav>
@@ -128,15 +128,15 @@
                                 src="{$basePath}/img/user/{if $avatar}{$userData->id}{else}avatar{/if}.jpg" alt="">
                         <span>{$user->getIdentity()->username}</span></a>
                     <ul class="dropdown-menu">
-                        <li><a n:href="Uzivatel:, id=>$userData->id, name=>$user->getIdentity()->username"><i
+                        <li><a n:href="Uzivatel:, id=>$userData->id, name=>$user->getIdentity()->username"{ifCurrent Uzivatel:*} class="active"{/ifCurrent}><i
                                         class="fa fa-user"></i> Můj profil</a></li>
-                        <li><a n:href="Nastaveni:"><i class="fa fa-gear"></i> Nastavení</a></li>
+                        <li><a n:href="Nastaveni:"{ifCurrent Nastaveni:*} class="active"{/ifCurrent}><i class="fa fa-gear"></i> Nastavení</a></li>
                         <li class="divider"></li>
-                        <li><a n:href="Odhlasit:"><i class="fa fa-power-off"></i> Odhlásit</a></li>
+                        <li><a n:href="Odhlasit:"{ifCurrent Odhlasit:*} class="active"{/ifCurrent}><i class="fa fa-power-off"></i> Odhlásit</a></li>
                     </ul>
                 </div>
                 <div class="nav-dropdown dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
+                    <a href="#"{ifCurrent Upozorneni:*} class="active"{/ifCurrent} class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i>
                         {if $notifications}<span
                                 class="label label-danger">{count($notifications)}</span>{/if}</a>
                     <ul class="dropdown-menu">
@@ -152,9 +152,9 @@
                     </ul>
                 </div>
             {else}
-                <a n:href="Prihlaseni:" data-toggle="tooltip" data-placement="bottom" title="Přihlásit se"><i
+                <a n:href="Prihlaseni:"{ifCurrent Prihlaseni:*} class="active"{/ifCurrent} data-toggle="tooltip" data-placement="bottom" title="Přihlásit se"><i
                             class="fa fa-user"></i></a>
-                <a n:href="Registrace:" data-toggle="tooltip" data-placement="bottom" title="Zaregistrovat se"><i
+                <a n:href="Registrace:"{ifCurrent Registrace:*} class="active"{/ifCurrent} data-toggle="tooltip" data-placement="bottom" title="Zaregistrovat se"><i
                             class="fa fa-users"></i></a>
             {/if}
             <a href="#" data-toggle="modal-search"><i class="fa fa-search"></i></a>

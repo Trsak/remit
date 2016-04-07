@@ -51,7 +51,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         }
 
         $this->template->addFilter('genre', function ($id) {
-            if (!isset($this->genres[$id])) {
+            if (isset($this->genres[$id])) {
                 return $this->genres[$id];
             }
             return false;
@@ -84,7 +84,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             "adr & dubbing" => "adr & dabování", "sound recordist" => "záznam zvuku", "rigging gaffer" => "osvětlení", "cinematography" => "kinematografie", "color timer" => "časování barev",
             "makeup artist" => "maskér", "script supervisor" => "vedoucí scénáře", "released" => "vydáno", "music" => "hudba", "screenplay" => "scénář", "art direction" => "umělecká režie",
             "costume design" => "kostýmy", "gaffer" => "osvětlovač", "stunt coordinator" => "koodinátor kaskadérů", "visual effects editor" => "vizuální efekty", "animation" => "animace",
-            "hairstylist" => "kadeřník", "makeup department head" => "vedoucí maskérny", "production manager" => "výrobní ředitel");
+            "hairstylist" => "kadeřník", "makeup department head" => "vedoucí maskérny", "production manager" => "výrobní ředitel", "in production" => "ve výrobě");
 
         if (isset($translation[$text])) {
             return $translation[$text];

@@ -3,7 +3,7 @@
     <div class="hero-bg"></div>
     <div class="container relative">
         <div class="page-header">
-            <div class="page-title">{$userProfile->username}</div>
+            <div class="page-title">{block #title}{$userProfile->username}{/block}</div>
             <div class="profile-avatar">
                 <div class="thumbnail" data-toggle="tooltip" title="{$userProfile->username}">
                     <a href="#">
