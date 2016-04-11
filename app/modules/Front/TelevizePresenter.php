@@ -24,6 +24,10 @@ class TelevizePresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
         $channelSelected = $this->EntityManager->getRepository(TvChannel::class)->findOneBy(array('id' => $channel));
         $this->template->channelSelected = $channelSelected;
+
+        $this->template->addFilter('secToDatetime', function ($sec) {
+            return $this->secondsToDate($sec);
+        });
     }
 
     protected function createComponentTvNotificationForm()
@@ -75,5 +79,10 @@ class TelevizePresenter extends \Remit\Module\Base\Presenters\BasePresenter
         }
 
         $this->redirect('this');
+    }
+
+    public static function secondsToDate($sec) {
+        $date = new \DateTime("@$sec");
+        return $date->format('d.m.Y H:i');
     }
 }

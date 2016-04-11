@@ -33,12 +33,12 @@
                     <tbody>
                     {foreach $guides as $guide}
                         <tr>
-                            <td>{$guide->start}</td>
-                            <td>{$guide->stop}</td>
+                            <td>{$guide->start|secToDatetime}</td>
+                            <td>{$guide->stop|secToDatetime}</td>
                             <td>{$guide->name}</td>
                             <td>
                                 <a n:href="Filmy:, search => 1, name => $guide->name" class="btn btn-inverse btn-circle btn-sm" data-toggle="tooltip" title="Najít film"><i class="fa fa-search" style="margin-top: 7px;"></i></a>
-                                <a data-start="{$guide->start}" data-tv="{$channelSelected->name}" data-name="{$guide->name}" class="btn btn-primary btn-circle btn-sm" {if $user->isLoggedIn()} data-toggle="modal" data-target="#myModal"{else} href="{link Prihlaseni:}"{/if}><i data-toggle="tooltip" title="Přidat upozornění" class="fa fa-bell" style="margin-top: 7px;"></i></a>
+                                <a data-start="{$guide->start|secToDatetime}" data-tv="{$channelSelected->name}" data-name="{$guide->name}" class="btn btn-primary btn-circle btn-sm" {if $user->isLoggedIn()} data-toggle="modal" data-target="#myModal"{else} href="{link Prihlaseni:}"{/if}><i data-toggle="tooltip" title="Přidat upozornění" class="fa fa-bell" style="margin-top: 7px;"></i></a>
                             </td>
                         </tr>
                     {/foreach}

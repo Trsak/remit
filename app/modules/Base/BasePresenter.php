@@ -234,12 +234,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $form = new UI\Form;
         $form->setMethod('GET');
         $form->addText('name', 'Název filmu');
-        $form->addSubmit('search', 'Hledat');
+        $form->addHidden('search')
+            ->setValue(1);
         $form->onSuccess[] = array($this, 'searchFormSucceeded');
-
         return $form;
     }
-
 
     public function searchFormSucceeded(UI\Form $form, $values)
     {

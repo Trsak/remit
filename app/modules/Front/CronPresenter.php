@@ -26,7 +26,7 @@ class CronPresenter extends \Remit\Module\Base\Presenters\BasePresenter
             $day = substr($start, 6, 2);
             $hour = substr($start, 8, 2);
             $minute = substr($start, 10, 2);
-            $start = $day . '.' . $month . '.' . $year . ' ' . $hour . ':' . $minute;
+            $start = $day . '.' . $month . '.' . $year . ' ' . $hour . ':' . $minute . ':' . '00';
 
             $stop = explode(" ", $guide->getAttribute('stop'));
             $stop = $stop[0];
@@ -35,7 +35,10 @@ class CronPresenter extends \Remit\Module\Base\Presenters\BasePresenter
             $day = substr($stop, 6, 2);
             $hour = substr($stop, 8, 2);
             $minute = substr($stop, 10, 2);
-            $stop = $day . '.' . $month . '.' . $year . ' ' . $hour . ':' . $minute;
+            $stop = $day . '.' . $month . '.' . $year . ' ' . $hour . ':' . $minute . ':' . '00';
+
+            $start = strtotime($start);
+            $stop = strtotime($stop);
 
             $tvGuide = $this->EntityManager->getRepository(TvGuide::class)->findOneBy(array('channel' => $guide->getAttribute('channel'), 'start' => $start));
 
@@ -50,12 +53,13 @@ class CronPresenter extends \Remit\Module\Base\Presenters\BasePresenter
             ++$i;
         }
 
-        try {
-            $this->EntityManager->flush();
-        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+        $this->EntityManager->flush();
 
-        }
+        $qb = $this->EntityManager->createQueryBuilder();
+        $qb->delete('TvGuide', 's');
+        $qb->where('s.stop < :stop');
+        $qb->setParameter('stop', time());
 
-        die(1);
+        die (1);
     }
 }

@@ -25,18 +25,22 @@ class FilmPresenter extends \Remit\Module\Base\Presenters\BasePresenter
 
             return false;
         });
+        try {
+            $this->template->movie = $client->getMoviesApi()->getMovie($id, array('language' => 'cs'));
+            $this->template->movieVideos = $client->getMoviesApi()->getVideos($id);
+            $this->template->movieImages = $client->getMoviesApi()->getImages($id);
+            $this->template->movieAlternatives = $client->getMoviesApi()->getSimilar($id, array('language' => 'cs'));
+            $this->template->movieCredits = $client->getMoviesApi()->getCredits($id, array('language' => 'cs'));
 
-        $this->template->movie = $client->getMoviesApi()->getMovie($id, array('language' => 'cs'));
-        $this->template->movieVideos = $client->getMoviesApi()->getVideos($id);
-        $this->template->movieImages = $client->getMoviesApi()->getImages($id);
-        $this->template->movieAlternatives = $client->getMoviesApi()->getSimilar($id, array('language' => 'cs'));
-        $this->template->movieCredits = $client->getMoviesApi()->getCredits($id, array('language' => 'cs'));
+            $this->template->page = $page;
+            $this->premiere = $this->template->movie["release_date"];
 
-        $this->template->page = $page;
-        $this->premiere = $this->template->movie["release_date"];
-
-        $this->template->notifMaxDate = date('Y-m-d', strtotime('-1 day', strtotime($this->premiere)));
-        $this->template->notifMinDate = date('Y-m-d', time());
+            $this->template->notifMaxDate = date('Y-m-d', strtotime('-1 day', strtotime($this->premiere)));
+            $this->template->notifMinDate = date('Y-m-d', time());
+        } catch (\Tmdb\Exception\TmdbApiException $e) {
+            $this->flashMessage('Zadaný film nebyl nalezen!', 'error');
+            $this->redirect('Default:');
+        }
     }
 
 

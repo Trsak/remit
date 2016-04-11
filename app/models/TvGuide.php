@@ -29,5 +29,4 @@ class TvGuide extends \Kdyby\Doctrine\Entities\BaseEntity
      * @ORM\Column(type="string")
      */
     protected $name;
-
 }

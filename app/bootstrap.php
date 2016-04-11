@@ -8,7 +8,7 @@ include '../vendor/autoload.php';
 
 // Configure application
 $configurator = new Nette\Configurator;
-
+$configurator->setDebugMode('84.19.71.115');
 // Enable Nette Debugger for error visualisation & logging
 $configurator->enableDebugger(__DIR__ . '/../log');
 
@@ -26,9 +26,6 @@ $container->getService("application")->errorPresenter = 'Front:Error';
 // Setup router using mod_rewrite detection
 $router = $container->getService('router');
 $router[] = new Route('index.php', 'Front:Default:default', Route::ONE_WAY);
-
-$router[] = $adminRouter = new RouteList('Admin');
-$adminRouter[] = new Route('admin/<presenter>/<action>', 'Default:default');
 
 $router[] = $frontRouter = new RouteList('Front');
 $frontRouter[] = new Route('Nastaveni[/<change>]', array(
